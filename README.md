@@ -1,5 +1,5 @@
 # Conky and lua for system monitoring
-[![N|Solid](https://i.imgur.com/OQfwIqf.jpg)](https://i.imgur.com/OQfwIqf.jpg))
+[![N|Solid](https://i.imgur.com/OQfwIqf.jpg)](https://i.imgur.com/OQfwIqf.jpg)
 
 ### The following is being monitored: 
 
@@ -29,8 +29,7 @@ $ fc-cache -fv
 ```
 
 ### Configuration
-- Create `wetch.config` with any text editor
-- Write it as the example in `wetch.config.example`
+Create `wetch.config` and write it as the example in `wetch.config.example`
 
 If you do not use Slack or Spotify, or if you do not which to use
 accuweather information: Open `luascript.lua` and remove, or comment
@@ -43,6 +42,6 @@ $ bash ~/conky/wetch.sh
 ```
 
 # Important
-I am currently using four different accuweather API keys in order to
+`wetch.sh` is using four different accuweather API keys in order to
 increase number of calls allowed per day. Alter the code as you wish,
 per the MIT license.

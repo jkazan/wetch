@@ -21,9 +21,9 @@ function conky_main()
     drawRamCpu()
     drawWifi()
     drawBattery()
-    -- drawSpotify()
-    -- drawWeather()
-    -- slack()
+    drawSpotify()
+    drawWeather()
+    slack()
 
 
     cairo_destroy(cr)
