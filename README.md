@@ -1,4 +1,4 @@
-# Conky and lua for system monitoring
+#wetch - conky and lua for system monitoring
 [![N|Solid](https://i.imgur.com/OQfwIqf.jpg)](https://i.imgur.com/OQfwIqf.jpg)
 
 ### The following is being monitored: 
