@@ -4,7 +4,7 @@
 ### The following is being monitored: 
 
 - Current weather conditions including temperature, ReelFeel,
-  couldiness, wind speed, wind direction, humidity and weather quality
+  cloudiness, wind speed, wind direction, humidity and weather quality
   algorithm
 - 12 hour weather forecast with icons located by the corresponding
   time on the clock
