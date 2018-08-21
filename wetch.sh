@@ -56,6 +56,7 @@ set_api_key() {
 }
 
 update_weather() {
+    notify-send "UPDATING!"
     #######################################
     # Update accuweather data
     # Globals (sourced):
@@ -83,7 +84,6 @@ update_weather() {
             cat ~/.cache/wetch/tempforecast.json | \
                 grep "Unauthorized" > /dev/null ; then
         local unauthorized_message="API key unauthorized, aborting"
-        echo $unauthorized_message
         notify-send wetch "$unauthorized_message"
         pkill conky
         exit
@@ -91,8 +91,7 @@ update_weather() {
             grep -o "ServiceUnavailable" > /dev/null ||
             cat ~/.cache/wetch/tempforecast.json | \
                 grep "ServiceUnavailable" > /dev/null ; then
-        notify-send wetch "Weather Service unavailable, using cached data for
-        now"
+        notify-send wetch "Weather Service unavailable, using cached data"
     else
         cp ~/.cache/wetch/tempweather.json ~/.cache/wetch/weather.json
         cp ~/.cache/wetch/tempforecast.json ~/.cache/wetch/forecast.json
@@ -228,9 +227,11 @@ main() {
     # Update weather every 15 minutes (defined in 'is_udpated')
     while true ; do
         if is_updated ; then
+            echo updated
             sleep 5
             continue
         fi
+        echo "not updated"
         set_api_key
         update_weather
         restart_conky
