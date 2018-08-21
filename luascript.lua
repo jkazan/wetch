@@ -52,10 +52,18 @@ function drawTime()
      --circleFill(center, wh, 60, 6, 0, 360, "${time %S}", 60, 1, 1, 1, 0.2)
 
      local hourPointer=hourMeter/12*360*math.pi/180-math.pi/2
-     jline(center+0*math.cos(hourPointer), wh+0*math.sin(hourPointer), center+58*math.cos(hourPointer), wh+58*math.sin(hourPointer), 7, 1,1,1,0.2)
+     jline(center+0*math.cos(hourPointer),
+           wh+0*math.sin(hourPointer),
+           center+50*math.cos(hourPointer),
+           wh+50*math.sin(hourPointer),
+           7,1,1,1,0.2)
 
      local minutePointer=minuteMeter/60*360*math.pi/180-math.pi/2
-     jline(center+0*math.cos(minutePointer), wh+0*math.sin(minutePointer), center+71*math.cos(minutePointer), wh+71*math.sin(minutePointer), 5, 1,1,1,0.2)
+     jline(center+0*math.cos(minutePointer),
+           wh+0*math.sin(minutePointer),
+           center+55*math.cos(minutePointer),
+           wh+55*math.sin(minutePointer),
+           5,1,1,1,0.2)
 
 
      jprint(conky_parse("${time %H}:${time %M}"), center+920, wh+70, 200, 1, 1, 1, 0.8, CAIRO_FONT_WEIGHT_NORMAL)
@@ -83,8 +91,17 @@ function drawWifi()
         circleFill(center, wh, 130, 6, 0, 80, link_qual, 100, 1, 1, 1, 0.4)
     end
 
-    jprint("wi-fi", center-40, wh-125, 16, 1, 1, 1, 1, CAIRO_FONT_WEIGHT_NORMAL)
-    jprint(conky_parse(essid), center-40, wh-140, 14, 1, 1, 1, 1, CAIRO_FONT_WEIGHT_NORMAL)
+    jprint("wi-fi",
+           center-40,
+           wh-125,
+           16,1,1,1,1,
+           CAIRO_FONT_WEIGHT_NORMAL)
+
+    jprint(conky_parse(essid),
+           center-40,
+           wh-140,
+           14,1,1,1,1,
+           CAIRO_FONT_WEIGHT_NORMAL)
 end
 
 function drawRamCpu()
@@ -103,17 +120,33 @@ function drawRamCpu()
     for i=0, 3, 1
     do
         cpuinner="${cpu cpu" .. i+1 .. "}"
-        circleFill(center, wh, 92, 5, start+i*length, start+i*length+stop, "100", 100, 1, 1, 1, 0.2)
-        circleFill(center, wh, 92, 5, start+i*length, start+i*length+stop, cpuinner, 100, 1, 1, 1, 0.5)
+        circleFill(center, wh, 92, 5,
+                   start+i*length,
+                   start+i*length+stop,
+                   "100", 100, 1, 1, 1, 0.2)
+        circleFill(center, wh, 92, 5,
+                   start+i*length,
+                   start+i*length+stop,
+                   cpuinner, 100, 1, 1, 1, 0.5)
 
         cpuouter="${cpu cpu" .. i+5 .. "}"
-        circleFill(center, wh, 99, 5, start+i*length, start+i*length+stop, "100", 100, 1, 1, 1, 0.2)
-        circleFill(center, wh, 99, 5, start+i*length, start+i*length+stop, cpuouter, 100, 1, 1, 1, 0.5)
+        circleFill(center, wh, 99, 5,
+                   start+i*length,
+                   start+i*length+stop,
+                   "100", 100, 1, 1, 1, 0.2)
+        circleFill(center, wh, 99, 5,
+                   start+i*length,
+                   start+i*length+stop,
+                   cpuouter, 100, 1, 1, 1, 0.5)
     end
 end
 
 function drawBattery()
-    jprint(conky_parse("${execi 300 ~/wetch/batnot.sh}"), center+210, wh, 16, 0.51, 0.74, 0, 1, CAIRO_FONT_WEIGHT_BOLD)
+jprint(conky_parse("${execi 300 ~/wetch/batnot.sh}"),
+       center+210,
+       wh,
+       16, 0.51, 0.74, 0, 1,
+       CAIRO_FONT_WEIGHT_BOLD)
     batteryLevel=tonumber(conky_parse("${battery_percent BAT0}"))
     r=0.7
     g=0.7
@@ -125,7 +158,8 @@ function drawBattery()
     end
 
     circleFill(center, wh, 95, 12, 230, 320, "100", 100, r, g, b, 0.2)
-    circleFill(center, wh, 95, 12, 230, 320, "${battery_percent BAT0}", 100, r, g, b, 0.5)
+    circleFill(center, wh, 95, 12, 230, 320,
+               "${battery_percent BAT0}", 100, r, g, b, 0.5)
 
     isDischarging=tonumber(conky_parse("${if_empty ${execi 10 upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep -o \"discharging\"}}0${else}1${endif}"))
     isCharging=tonumber(conky_parse("${if_empty ${execi 10 upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep -o \"charging\"}}0${else}1${endif}"))
@@ -163,7 +197,7 @@ function drawWeather()
     jprint(conky_parse(
            "Wind " .. wind .. " m/s ${exec jq .[].Wind.Direction.Localized ~/.cache/wetch/weather.json | cut -d: -f2 | tr -d '\"'}"),
            weathertextx, wh+160, 16, 1, 1, 1, 1, CAIRO_FONT_WEIGHT_NORMAL)
-    jprint("weather updated " .. conky_parse("${exec echo $(date -r ~/.cache/wetch/last_weather_update.txt) | grep -o '[0-9][0-9]:[0-9][0-9]:[0-9][0-9]'}"),
+    jprint("Updated " .. conky_parse("${exec echo $(date -r ~/.cache/wetch/last_weather_update.txt) | grep -o '[0-9][0-9]:[0-9][0-9]:[0-9][0-9]'}"),
            weathertextx, wh+200, 16, 1, 1, 1, 1, CAIRO_FONT_WEIGHT_NORMAL)
 
     -- Parse time to determine location of weather icons
