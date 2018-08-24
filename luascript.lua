@@ -1,6 +1,9 @@
 require 'cairo'
 require 'imlib2'
 
+-------------------------------------
+-- Main function
+-------------------------------------
 function conky_main()
    if conky_window == nil then
       return
@@ -31,6 +34,9 @@ function conky_main()
    cr=nil
 end
 
+-------------------------------------
+-- Prints, and draws, time information
+-------------------------------------
 function drawTime()
    H=tonumber(conky_parse("${time %H}"))
    M=tonumber(conky_parse("${time %M}"))
@@ -104,6 +110,9 @@ function drawWifi()
           CAIRO_FONT_WEIGHT_NORMAL)
 end
 
+-------------------------------------
+-- Prints, and draws, ram information
+-------------------------------------
 function drawRamCpu()
    circleFill(center, wh, 130, 6, 120, 200, "100", 100, 1, 1, 1, 0.2)
    circleFill(center, wh, 130, 6, 120, 200, "${cpu}", 100, 1, 1, 1, 0.5)
@@ -141,6 +150,9 @@ function drawRamCpu()
    end
 end
 
+-------------------------------------
+-- Prints, and draws, battery information
+-------------------------------------
 function drawBattery()
    batteryLevel=tonumber(conky_parse("${battery_percent BAT0}"))
    r=0.7
@@ -193,6 +205,9 @@ function drawBattery()
    end
 end
 
+-------------------------------------
+-- Uses cached data to draw weather icons and weather data
+-------------------------------------
 function drawWeather()
    weather_flag=conky_parse("${exec cat ~/.cache/wetch/weather_flag}")
 
@@ -291,7 +306,7 @@ function drawWeather()
 
    tempval=100/(1+2.71^(-(tonumber(temp)-13)/5))
    cloudval=100-clouds
-   humidityval=100/(1+2.71^(-(75-tonumber(humidity))/10))
+   humidityval=100/(1+2.71^(-75-tonumber(humidity)/10))
    windval=10*100/(1+2^(-(3-tonumber(wind))*1.1))
    weatherval=10*weatherval
 
@@ -310,6 +325,11 @@ function drawWeather()
    jline(center+205, wh+60, center+205, wh+200, 3, 1,1,1,0.4)
 end
 
+-------------------------------------
+-- Calls external script to print currently playing artist and track
+-- in Spotify
+-------------------------------------
+
 function drawSpotify()
    isRunning=tonumber(conky_parse("${if_running spotify}1${else}0${endif}"))
    if isRunning == 1 then
@@ -322,13 +342,9 @@ function drawSpotify()
    end
 end
 
-function drawWorkspace()
-   jprint("ws", ww-20, wh-140, 16, 1, 1, 1, 0.8, CAIRO_FONT_WEIGHT_BOLD)
-
-   jprint(conky_parse("${exec wmctrl -d | grep '*' | cut -c 1}"),
-          ww, wh-140, 16, 1, 1, 1, 0.8, CAIRO_FONT_WEIGHT_BOLD)
-end
-
+-------------------------------------
+-- Calls external script to pull number of unread Slack messages
+-------------------------------------
 function slack()
    slack_flag=conky_parse("${exec cat ~/.cache/wetch/slack_flag}")
 
@@ -356,6 +372,18 @@ function slack()
 
 end
 
+-------------------------------------
+-- Writes text
+-- @param str String
+-- @param x coordinate
+-- @param y coordinate
+-- @param fontSize
+-- @param r red
+-- @param g green
+-- @param b blue
+-- @param a alpha
+-- @param face font face
+-------------------------------------
 function jprint(str, x, y, fontSize, r, g, b, a, face)
    cairo_select_font_face(cr, "Poiret One", CAIRO_FONT_SLANT_NORMAL, face)
    cairo_set_font_size(cr, fontSize)
@@ -365,6 +393,21 @@ function jprint(str, x, y, fontSize, r, g, b, a, face)
    cairo_stroke(cr)
 end
 
+-------------------------------------
+-- Draws a circle
+-- @param x center x coordinate
+-- @param y center y coordinate
+-- @param rad radius
+-- @param width edge width
+-- @param deg0 start angle
+-- @param deg1 end angle
+-- @param cmd conky command for calculating value
+-- @param max max value
+-- @param r red
+-- @param g green
+-- @param b blue
+-- @param a alpha
+-------------------------------------
 function circleFill(x, y, rad, width, deg0, deg1, cmd, max, r, g, b, a)
    value=conky_parse(cmd)
    end_deg=value*(deg1-deg0)/max + deg0
@@ -375,17 +418,14 @@ function circleFill(x, y, rad, width, deg0, deg1, cmd, max, r, g, b, a)
    cairo_stroke(cr)
 end
 
-function circleStep(x, y, rad, width, cmd, max, r, g, b, a)
-   value=conky_parse(cmd)
-   start_deg=value*(360/max)-1
-   end_deg=value*(360/max)+1
-
-   cairo_set_line_width(cr,width)
-   cairo_set_source_rgba(cr,r,g,b,a)
-   cairo_arc(cr,x,y,rad,(start_deg-90)*(math.pi/180),(end_deg-90)*(math.pi/180))
-   cairo_stroke(cr)
-end
-
+-------------------------------------
+-- Draws image
+-- @param path path to image
+-- @param w image width in pixels
+-- @param h image height in pixels
+-- @param x Upper left corner x coordinate
+-- @param y Upper left corner y coordinate
+-------------------------------------
 function jimage(path, w, h, x, y)
    local image = imlib_load_image(path)
    imlib_context_set_image(image)
@@ -398,6 +438,18 @@ function jimage(path, w, h, x, y)
    imlib_free_image()
 end
 
+-------------------------------------
+-- Draws a straight line
+-- @param x1 x start coordinate
+-- @param y1 y start coordinate
+-- @param x2 x end coordinate
+-- @param y2 y end coordinate
+-- @param w line width
+-- @param r red
+-- @param g green
+-- @param b blue
+-- @param a alpha
+-------------------------------------
 function jline(x1, y1, x2, y2, w, r, g, b, a)
    cairo_set_line_width(cr, w)
    cairo_set_line_cap (cr, CAIRO_LINE_CAP_SQUARE)
@@ -407,6 +459,12 @@ function jline(x1, y1, x2, y2, w, r, g, b, a)
    cairo_stroke(cr)
 end
 
+
+
+-------------------------------------
+-- Converts 24h format to 12h
+-- @param t time in 24h format
+-------------------------------------
 function timeModulo(t)
    if t == nil then
       return
