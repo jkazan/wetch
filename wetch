@@ -2,16 +2,16 @@
 #
 # This script governs the wetch widget
 
+#######################################
+# Check internet connection
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
 verify_internet_connection() {
-    #######################################
-    # Check internet connection
-    # Globals:
-    #   None
-    # Arguments:
-    #   None
-    # Returns:
-    #   None
-    #######################################
     local timeout=20
     local tries=0
     while !(ping -c 1 google.com > /dev/null) ; do
@@ -26,17 +26,16 @@ verify_internet_connection() {
     done
 }
 
+#######################################
+# Choose api key depending on time, 4 keys allows 4 times more calls
+# Globals (sourced):
+#   api_key1, api_key2, api_key3, api_key4
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
 set_api_key() {
-    #######################################
-    # Choose api key depending on time, 4 keys allows 4 times more calls
-    # Globals (sourced):
-    #   api_key1, api_key2, api_key3, api_key4
-    # Arguments:
-    #   None
-    # Returns:
-    #   None
-    #######################################
-
     api_key=""
 
     local now=$(date +"%s")
@@ -55,17 +54,16 @@ set_api_key() {
     fi
 }
 
+#######################################
+# Update accuweather data
+# Globals (sourced):
+#   city_code
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
 update_weather() {
-    #######################################
-    # Update accuweather data
-    # Globals (sourced):
-    #   city_code
-    # Arguments:
-    #   None
-    # Returns:
-    #   None
-    #######################################
-
     # Get current weather conditions
     local weather_url="http://dataservice.accuweather.com/currentconditions/v1/"
     weather_url+="${WETCH_CC}?apikey=${api_key}&language=en-us&details=true"
@@ -91,6 +89,7 @@ update_weather() {
             || cat ~/.cache/wetch/tempforecast.json | \
                 grep "ServiceUnavailable" > /dev/null ; then
         notify-send wetch "Weather Service unavailable, using cached data"
+        sleep 900
     else
         cp ~/.cache/wetch/tempweather.json ~/.cache/wetch/weather.json
         cp ~/.cache/wetch/tempforecast.json ~/.cache/wetch/forecast.json
@@ -110,34 +109,32 @@ update_weather() {
     echo $now > ~/.cache/wetch/last_weather_update.txt
 }
 
+#######################################
+# Make sure cached data exists
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
 cache_weather_update_time() {
-    #######################################
-    # Make sure cached data exists
-    # Globals:
-    #   None
-    # Arguments:
-    #   None
-    # Returns:
-    #   None
-    #######################################
-
     # Create last_weather_update.txt if non-existing
     if [ ! -f ~/.cache/wetch/last_weather_update.txt ]; then
         echo 0 > ~/.cache/wetch/last_weather_update.txt
     fi
 }
 
+#######################################
+# Kill currently running conky session
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
 kill_running() {
-    #######################################
-    # Kill currently running conky session
-    # Globals:
-    #   None
-    # Arguments:
-    #   None
-    # Returns:
-    #   None
-    #######################################
-
     # If conky is running, kill it and start. Makes it possible to
     # reboot anytime
     if ps cax | grep -o conky > /dev/null ; then
@@ -176,31 +173,30 @@ is_updated() {
     return 1
 }
 
+#######################################
+# Restart conky sessionn
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
 restart_conky() {
-    #######################################
-    # Restart conky sessionn
-    # Globals:
-    #   None
-    # Arguments:
-    #   None
-    # Returns:
-    #   None
-    #######################################
-
     killall conky
     conky -c ~/wetch/.conkyrc
 }
 
+#######################################
+# Main funciton
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
 main() {
-    #######################################
-    # Main funciton
-    # Globals:
-    #   None
-    # Arguments:
-    #   None
-    # Returns:
-    #   None
-    #######################################
     mkdir -p ~/.cache/wetch/    # Create .cache/wetch dir if non-existing
     cache_weather_update_time   # create .cache/wetch/last_weather_update.txt
     verify_internet_connection  # Verify that internet connection is up
@@ -243,7 +239,7 @@ while getopts ":hwsv" opt; do
             echo "  -w   run wetch with weather features"
             echo "  -s   run wetch with Slack features"
             exit 0
-           ;;
+            ;;
         w) weather_flag='true' ;;
         s) slack_flag='true' ;;
         v) verbose='true' ;;
