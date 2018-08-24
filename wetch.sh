@@ -56,7 +56,6 @@ set_api_key() {
 }
 
 update_weather() {
-    notify-send "UPDATING!"
     #######################################
     # Update accuweather data
     # Globals (sourced):
@@ -79,17 +78,17 @@ update_weather() {
 
     # If service is unavailable, do not overwrite cached data, instead
     # notify user and keep using old data until service is available
-    if cat ~/.cache/wetch/tempweather.json | \
-            grep -o "Unauthorized" > /dev/null ||
-            cat ~/.cache/wetch/tempforecast.json | \
-                grep "Unauthorized" > /dev/null ; then
+    if cat ~/.cache/wetch/tempweather.json \
+            | grep -o "Unauthorized" > /dev/null \
+            || cat ~/.cache/wetch/tempforecast.json \
+                | grep "Unauthorized" > /dev/null ; then
         local unauthorized_message="API key unauthorized, aborting"
         notify-send wetch "$unauthorized_message"
         pkill conky
         exit
-    elif cat ~/.cache/wetch/tempweather.json | \
-            grep -o "ServiceUnavailable" > /dev/null ||
-            cat ~/.cache/wetch/tempforecast.json | \
+    elif cat ~/.cache/wetch/tempweather.json \
+            | grep -o "ServiceUnavailable" > /dev/null \
+            || cat ~/.cache/wetch/tempforecast.json | \
                 grep "ServiceUnavailable" > /dev/null ; then
         notify-send wetch "Weather Service unavailable, using cached data"
     else
@@ -111,7 +110,7 @@ update_weather() {
     echo $now > ~/.cache/wetch/last_weather_update.txt
 }
 
-verify_last_update() {
+cache_weather_update_time() {
     #######################################
     # Make sure cached data exists
     # Globals:
@@ -125,8 +124,6 @@ verify_last_update() {
     # Create last_weather_update.txt if non-existing
     if [ ! -f ~/.cache/wetch/last_weather_update.txt ]; then
         echo 0 > ~/.cache/wetch/last_weather_update.txt
-        notify-send -i ~/wetch/nointernet.svg wetch "Loading..."
-        update_weather
     fi
 }
 
@@ -150,6 +147,8 @@ kill_running() {
             | grep -v grep \
             | awk 'FNR == 1 {print "kill -9 " $1}' \
             | sh
+
+        # ps axf | grep wetch.sh | grep -v grep | awk 'FNR == 1 {print "kill -9 " $1}' | sh
     fi
 }
 
@@ -168,7 +167,7 @@ is_updated() {
     local now=$(date +"%s")
     local deltaH=$(($now - $now%3600 - $last_update + $last_update%3600))
 
-    # If it is less than 15 minutes since last update and it is not a
+    # If it is less than 15 minutes since last update, and it is not a
     # new full hour, return false
     if (( $now - $last_update < 900 && $deltaH == 0 )) ; then
         return 0
@@ -203,38 +202,22 @@ main() {
     #   None
     #######################################
 
-    # Create .cache/wetch dir and cache files if non-existing
-    mkdir -p ~/.cache/wetch/
+    mkdir -p ~/.cache/wetch/    # Create .cache/wetch dir if non-existing
+    cache_weather_update_time   # create .cache/wetch/last_weather_update.txt
+    verify_internet_connection  # Verify that internet connection is up
+    set_api_key                 # Let function select which API key one to use
+    kill_running                # Kill any running session
+    update_weather              # Update weather data
+    conky -c ~/wetch/.conkyrc   # Start conky
 
-    # Verify connection and update weather data
-    verify_internet_connection
 
-    # Give 4 api keys and let function select which one to use
-    set_api_key
-
-    # Check when wetch was last updated
-    verify_last_update
-
-    # Kill any running session
-    kill_running
-
-    # Update weather data
-    update_weather
-
-    # Start conky
-    conky -c ~/wetch/.conkyrc
-
-    # Update weather every 15 minutes (defined in 'is_udpated')
     while true ; do
-        if is_updated ; then
-            echo updated
-            sleep 5
-            continue
+        if !(is_updated) ; then # If weather is not up-to-date
+            set_api_key         # Let function select which API key one to use
+            update_weather      # Update weather data
+            restart_conky       # Restart conky with new weather icons etc.
         fi
-        echo "not updated"
-        set_api_key
-        update_weather
-        restart_conky
+        sleep 5                 # Wait 5s before continuing
     done
 }
 
