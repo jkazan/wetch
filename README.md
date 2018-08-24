@@ -24,7 +24,7 @@ $ cd ~/
 $ sudo apt-get install conky-all
 $ git clone https://github.org/jkazan/wetch
 $ mkdir .fonts
-$ mv wetch/PoiretOne-Regular.ttf .fonts/
+$ mv wetch/poiret-one/PoiretOne-Regular.ttf .fonts/
 $ fc-cache -fv
 ```
 
