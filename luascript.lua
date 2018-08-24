@@ -177,6 +177,12 @@ jprint(conky_parse("${execi 300 ~/wetch/batnot.sh}"),
 end
 
 function drawWeather()
+    weather_flag=conky_parse("${exec cat ~/.cache/wetch/weather_flag}")
+
+    if weather_flag == 'false' then
+        do return end
+    end
+
     temp=conky_parse("${exec jq .[].Temperature.Metric.Value ~/.cache/wetch/weather.json | awk '{print int($1+0.5)}'}")
     clouds=conky_parse("${exec jq .[].CloudCover ~/.cache/wetch/weather.json}")
     humidity=conky_parse("${exec jq .[].RelativeHumidity ~/.cache/wetch/weather.json | awk '{print int($1+0.5)}'}")
@@ -283,6 +289,12 @@ function drawWorkspace()
 end
 
 function slack()
+    slack_flag=conky_parse("${exec cat ~/.cache/wetch/slack_flag}")
+
+    if slack_flag == 'false' then
+        do return end
+    end
+
     slackx=center+230
     slacky=wh+15
     jimage(conky_parse("/home/${uid_name 1000}/wetch/slack-web.png"), 30, 30, slackx-25, slacky)
