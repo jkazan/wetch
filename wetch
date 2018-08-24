@@ -126,7 +126,7 @@ cache_weather_update_time() {
 }
 
 #######################################
-# Kill currently running conky session
+# Kill currently running conky session and any running wetch script
 # Globals:
 #   None
 # Arguments:
@@ -135,18 +135,14 @@ cache_weather_update_time() {
 #   None
 #######################################
 kill_running() {
-    # If conky is running, kill it and start. Makes it possible to
-    # reboot anytime
-    if ps cax | grep -o conky > /dev/null ; then
-        killall conky
-        ps axf \
-            | grep wetch.sh \
-            | grep -v grep \
-            | awk 'FNR == 1 {print "kill -9 " $1}' \
-            | sh
-
-        # ps axf | grep wetch.sh | grep -v grep | awk 'FNR == 1 {print "kill -9 " $1}' | sh
-    fi
+    killall conky
+    ps axf \
+        | grep wetch/wetch \
+        | grep -v grep \
+        | awk '{print "kill -9 " $1}' \
+        | tac \
+        | sed -n '1!p' \
+        | sh
 }
 
 is_updated() {
