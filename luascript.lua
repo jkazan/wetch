@@ -38,14 +38,14 @@ end
 -- Prints, and draws, time information
 -------------------------------------
 function drawTime()
-   H=tonumber(conky_parse("${time %H}"))
-   M=tonumber(conky_parse("${time %M}"))
-   S=tonumber(conky_parse("${time %S}"))
+   local H=tonumber(conky_parse("${time %H}"))
+   local M=tonumber(conky_parse("${time %M}"))
+   local S=tonumber(conky_parse("${time %S}"))
    if H > 11 then
       H = H-12
    end
-   hourMeter=H+M/60
-   minuteMeter=M
+   local hourMeter=H+M/60
+   local minuteMeter=M
 
    circleFill(center, wh, 65, 6, 0, 360, "12", 12, 1, 1, 1, 0.2)
    circleFill(center, wh, 65, 7, 0, 360, hourMeter, 12, 1, 1, 1, 0.4)
@@ -81,14 +81,14 @@ function drawDate()
 end
 
 function drawWifi()
-   wireless=conky_parse("${exec /sbin/ifconfig | egrep -o '^w[^:]+'}")
-   link_qual="${wireless_link_qual " .. wireless .. "}"
+   local wireless=conky_parse("${exec /sbin/ifconfig | egrep -o '^w[^:]+'}")
+   local link_qual="${wireless_link_qual " .. wireless .. "}"
 
-   essid=conky_parse("${exec iwconfig 2>/dev/null " ..
-                        "| grep ESSID | cut -d: -f2 | tr -d '\"'}")
+   local essid=conky_parse("${exec iwconfig 2>/dev/null " ..
+                              "| grep ESSID | cut -d: -f2 | tr -d '\"'}")
 
-   isConnected=tonumber(conky_parse("${if_existing /proc/net/route " ..
-                                    wireless .. "}1${else}0${endif}"))
+   local isConnected=tonumber(conky_parse("${if_existing /proc/net/route " ..
+                                          wireless .. "}1${else}0${endif}"))
 
    if isConnected == 0 or wireless == "" then
       circleFill(center, wh, 130, 6, 0, 80, "100", 100, 1, 0, 0, 0.2)
@@ -123,9 +123,10 @@ function drawRamCpu()
    circleFill(center, wh, 95, 12, 0, 80, "${memperc}", 100, 1, 1, 1, 0.5)
    jprint("ram", center-40, wh-90, 16, 1, 1, 1, 1, CAIRO_FONT_WEIGHT_NORMAL)
 
-   start=100
-   length=26
-   stop=21
+   local start=100
+   local length=26
+   local stop=21
+
    for i=0, 3, 1
    do
       cpuinner="${cpu cpu" .. i+1 .. "}"
@@ -154,10 +155,10 @@ end
 -- Prints, and draws, battery information
 -------------------------------------
 function drawBattery()
-   batteryLevel=tonumber(conky_parse("${battery_percent BAT0}"))
-   r=0.7
-   g=0.7
-   b=1
+   local batteryLevel=tonumber(conky_parse("${battery_percent BAT0}"))
+   local r=0.7
+   local g=0.7
+   local b=1
    if batteryLevel < 15 then
       r=1
       g=0
@@ -183,9 +184,9 @@ function drawBattery()
       "/org/freedesktop/UPower/devices/battery_BAT0 " ..
    "| grep \"fully-charged\"}}0${else}1${endif}"
 
-   isDischarging=tonumber(conky_parse(isDischargingStr))
-   isCharging=tonumber(conky_parse(isChargingStr))
-   isFullyCharged=tonumber(conky_parse(isFullyChargedStr))
+   local isDischarging=tonumber(conky_parse(isDischargingStr))
+   local isCharging=tonumber(conky_parse(isChargingStr))
+   local isFullyCharged=tonumber(conky_parse(isFullyChargedStr))
 
    if isDischarging == 1 then
       jprint("discharging", center-120, wh+90, 16,
@@ -209,28 +210,29 @@ end
 -- Uses cached data to draw weather icons and weather data
 -------------------------------------
 function drawWeather()
-   weather_flag=conky_parse("${exec cat ~/.cache/wetch/weather_flag}")
+   local weather_flag=conky_parse("${exec cat ~/.cache/wetch/weather_flag}")
 
    if weather_flag == 'false' then
       do return end
    end
 
-   temp=conky_parse("${exec jq .[].Temperature.Metric.Value " ..
-                       "~/.cache/wetch/weather.json " ..
-                       "| awk '{print int($1+0.5)}'}")
+   local temp=conky_parse("${exec jq .[].Temperature.Metric.Value " ..
+                             "~/.cache/wetch/weather.json " ..
+                             "| awk '{print int($1+0.5)}'}")
 
-   clouds=conky_parse("${exec jq .[].CloudCover ~/.cache/wetch/weather.json}")
+   local clouds=conky_parse("${exec jq .[].CloudCover " ..
+                               "~/.cache/wetch/weather.json}")
 
-   humidity=conky_parse("${exec jq .[].RelativeHumidity " ..
-                           "~/.cache/wetch/weather.json " ..
-                           "| awk '{print int($1+0.5)}'}")
+   local humidity=conky_parse("${exec jq .[].RelativeHumidity " ..
+                                 "~/.cache/wetch/weather.json " ..
+                                 "| awk '{print int($1+0.5)}'}")
 
-   wind=conky_parse("${exec jq .[].Wind.Speed.Metric.Value " ..
-                       "~/.cache/wetch/weather.json " ..
-                       "| awk '{print int($1/3.6)}'}")
+   local wind=conky_parse("${exec jq .[].Wind.Speed.Metric.Value " ..
+                             "~/.cache/wetch/weather.json " ..
+                             "| awk '{print int($1/3.6)}'}")
 
    -- Weather text information
-   weathertextx=center+220
+   local weathertextx=center+220
 
    jprint(conky_parse(temp .. " °C"),
           weathertextx, wh+80, 25, 1, 1, 1, 1, CAIRO_FONT_WEIGHT_NORMAL)
@@ -261,12 +263,15 @@ function drawWeather()
           weathertextx, wh+200, 16, 1, 1, 1, 1, CAIRO_FONT_WEIGHT_NORMAL)
 
    -- Parse time to determine location of weather icons and set icons
-   x = {center+62, center+121, center+144, center+122, center+60, center-25,
-        center-110, center-173, center-195, center-173, center-110, center-25}
+   local x={center+62, center+121, center+144, center+122,
+            center+60, center-25, center-110, center-173,
+            center-195, center-173, center-110, center-25}
 
-   y = {wh-160, wh-99, wh-15, wh+70, wh+133, wh+155, wh+133, wh+70, wh-15,
-        wh-99, wh-160, wh-184}
+   local y={wh-160, wh-99, wh-15, wh+70,
+            wh+133, wh+155, wh+133, wh+70,
+            wh-15, wh-99, wh-160, wh-184}
 
+   local jsStr=""
    for i=0, 11, 1 do
       jsStr="${exec jq .[" .. i .. "].DateTime ~/.cache/wetch/forecast.json " ..
          "| grep -o T[0-9][0-9] | grep -o [0-9][0-9]}"
@@ -280,9 +285,9 @@ function drawWeather()
           75, 45, center-38, wh-20)
 
    -- Weather quality
-   weatherstr=conky_parse("${exec jq .[].WeatherText " ..
-                             "~/.cache/wetch/weather.json " ..
-                             "| cut -d: -f2 | tr -d '\"'}")
+   local weatherstr=conky_parse("${exec jq .[].WeatherText " ..
+                                   "~/.cache/wetch/weather.json " ..
+                                   "| cut -d: -f2 | tr -d '\"'}")
 
    if weatherstr == "Sunny" then
       weatherval=100
@@ -304,13 +309,13 @@ function drawWeather()
       weatherval=0
    end
 
-   tempval=100/(1+2.71^(-(tonumber(temp)-13)/5))
-   cloudval=100-clouds
-   humidityval=100/(1+2.71^(-75-tonumber(humidity)/10))
-   windval=10*100/(1+2^(-(3-tonumber(wind))*1.1))
-   weatherval=10*weatherval
+   local tempval=100/(1+2.71^(-(tonumber(temp)-13)/5))
+   local cloudval=100-clouds
+   local humidityval=100/(1+2.71^(-75-tonumber(humidity)/10))
+   local windval=10*100/(1+2^(-(3-tonumber(wind))*1.1))
+   local weatherval=10*weatherval
 
-   quality=math.floor(
+   local quality=math.floor(
       (tempval + cloudval + humidityval + windval + weatherval)/23 + 0.5)
 
    circleFill(center, wh, 130, 6, 265, 330, "100", 100, 1, 1, 1, 0.2)
@@ -331,7 +336,9 @@ end
 -------------------------------------
 
 function drawSpotify()
-   isRunning=tonumber(conky_parse("${if_running spotify}1${else}0${endif}"))
+   local isRunning=tonumber(conky_parse("${if_running spotify}1" ..
+                                        "${else}0${endif}"))
+
    if isRunning == 1 then
       jimage(conky_parse("/home/${uid_name 1000}/wetch/spotify-client.png"),
              40, 40, center+200, wh-50)
@@ -346,19 +353,19 @@ end
 -- Calls external script to pull number of unread Slack messages
 -------------------------------------
 function slack()
-   slack_flag=conky_parse("${exec cat ~/.cache/wetch/slack_flag}")
+   local slack_flag=conky_parse("${exec cat ~/.cache/wetch/slack_flag}")
 
    if slack_flag == 'false' then
       do return end
    end
 
-   slackx=center+230
-   slacky=wh+15
+   local slackx=center+230
+   local slacky=wh+15
 
    jimage(conky_parse("/home/${uid_name 1000}/wetch/slack-web.png"),
           30, 30, slackx-25, slacky)
 
-   unread=tonumber(conky_parse("${execi 5 ~/wetch/slack.sh}"))
+   local unread=tonumber(conky_parse("${execi 5 ~/wetch/slack.sh}"))
 
    if unread > 0 then
       circleFill(slackx+4, slacky+5, 3, 7, 0, 360, "100", 100, 0.64, 0, 0, 1)
@@ -409,8 +416,8 @@ end
 -- @param a alpha
 -------------------------------------
 function circleFill(x, y, rad, width, deg0, deg1, cmd, max, r, g, b, a)
-   value=conky_parse(cmd)
-   end_deg=value*(deg1-deg0)/max + deg0
+   local value=conky_parse(cmd)
+   local end_deg=value*(deg1-deg0)/max + deg0
    cairo_set_line_width(cr,width)
    cairo_set_line_cap(cr, CAIRO_LINE_CAP_SQUARE)
    cairo_set_source_rgba(cr,r,g,b,a)
