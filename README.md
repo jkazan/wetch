@@ -20,28 +20,35 @@
 
 ### Installation
 ```sh
-$ cd ~/
 $ sudo apt-get install conky-all
 $ git clone https://github.org/jkazan/wetch
-$ mkdir .fonts
-$ mv wetch/poiret-one/PoiretOne-Regular.ttf .fonts/
-$ fc-cache -fv
+$ bash install.sh
 ```
 
 ### Configuration
-Create `wetch.config` and write it as the example in `wetch.config.example`
-
-If you do not use Slack or Spotify, or if you do not which to use
-accuweather information: Open `luascript.lua` and remove, or comment
-out, `drawSpotify()` and/or `slack()` and/or `drawWeather()` in the
-`conky_main()` function. Note that comment syntax in lua is `--`
+If you want to use weather and/or Slack features in wetch, add
+information in `wetch.config` as per instructions.
 
 ### Run
 ```sh
-$ bash ~/conky/wetch.sh
+Usage: wetch [OPTION]
+Options:
+  -h   show brief help
+  -w   run wetch with weather features
+  -s   run wetch with Slack features
+```
+
+#### Examples
+##### Run vanilla
+```sh
+./wetch
+```
+##### Run with all features
+```sh
+./wetch -ws
 ```
 
 # Important
-`wetch.sh` is using four different accuweather API keys in order to
+`wetch` is using four different accuweather API keys in order to
 increase number of calls allowed per day. Alter the code as you wish,
 per the MIT license.
