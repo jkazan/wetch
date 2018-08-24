@@ -273,11 +273,13 @@ function drawWeather()
 
    local jsStr=""
    for i=0, 11, 1 do
-      jsStr="${exec jq .[" .. i .. "].DateTime ~/.cache/wetch/forecast.json " ..
+      jsStr="${exec jq .[" .. tostring(i) .. "].DateTime ~/.cache/wetch/forecast.json " ..
          "| grep -o T[0-9][0-9] | grep -o [0-9][0-9]}"
 
-      hourMark=timeModulo(tonumber(conky_parse(jsStr)))
-      jimage(conky_parse("/home/${uid_name 1000}/.cache/wetch/forecast-1.png"),
+      local hourMark=timeModulo(tonumber(conky_parse(jsStr)))
+
+      jimage(conky_parse("/home/${uid_name 1000}/.cache/wetch/forecast-" ..
+                            tostring(i+1) ..".png"),
              50, 30, x[hourMark], y[hourMark])
    end
 
