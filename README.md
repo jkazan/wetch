@@ -21,7 +21,8 @@
 ### Installation
 ```sh
 $ sudo apt-get install conky-all
-$ git clone https://github.org/jkazan/wetch
+$ git clone https://github.com/jkazan/wetch
+$ cd wetch
 $ bash install.sh
 ```
 
