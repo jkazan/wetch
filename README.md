@@ -26,10 +26,8 @@ $ bash install.sh
 ```
 
 ### Dependencies
-```sh
-$ sudo apt-get install conky-all
-$ sudo apt-get install libnotify4
-```
+- conky-all
+- libnotify4
 
 ### Configuration
 If you want to use weather and/or Slack features in wetch, add
