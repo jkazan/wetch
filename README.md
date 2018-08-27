@@ -20,10 +20,15 @@
 
 ### Installation
 ```sh
-$ sudo apt-get install conky-all
 $ git clone https://github.com/jkazan/wetch
 $ cd wetch
 $ bash install.sh
+```
+
+### Dependencies
+```sh
+$ sudo apt-get install conky-all
+$ sudo apt-get install libnotify4
 ```
 
 ### Configuration
