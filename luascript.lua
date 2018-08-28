@@ -19,8 +19,8 @@ function conky_main()
    wh=conky_window.height/2
    center=250
 
-   drawTime()
-   drawDate()
+   drawTimeCircles()
+   drawDateTime()
    drawRamCpu()
    drawWifi()
    drawBattery()
@@ -37,7 +37,13 @@ end
 -------------------------------------
 -- Prints, and draws, time information
 -------------------------------------
-function drawTime()
+function drawTimeCircles()
+   local monitor_flag=conky_parse("${exec cat ~/.cache/wetch/monitor_flag}")
+
+   if monitor_flag == 'false' then
+      do return end
+   end
+
    local H=tonumber(conky_parse("${time %H}"))
    local M=tonumber(conky_parse("${time %M}"))
    local S=tonumber(conky_parse("${time %S}"))
@@ -67,13 +73,12 @@ function drawTime()
          wh+55*math.sin(minutePointer),
          5,1,1,1,0.2)
 
-
-   jprint(conky_parse("${time %H}:${time %M}"), center+920, wh+70, 200,
-          1, 1, 1, 0.8, CAIRO_FONT_WEIGHT_NORMAL)
+   jline(center+200, wh, center+900, wh, 3, 1,1,1,0.8)
 end
 
-function drawDate()
-   jline(center+200, wh, center+900, wh, 3, 1,1,1,0.8)
+function drawDateTime()
+   jprint(conky_parse("${time %H}:${time %M}"), center+920, wh+70, 200,
+          1, 1, 1, 0.8, CAIRO_FONT_WEIGHT_NORMAL)
    jprint(conky_parse("${execi 300 LANG='' LC_TIME='' date +'%A'}"),
           center+920, wh-100, 80, 1, 1, 1, 0.8, CAIRO_FONT_WEIGHT_NORMAL)
    jprint(conky_parse("${execi 300 LANG='' LC_TIME='' date +'%B %d'}"),
@@ -81,6 +86,12 @@ function drawDate()
 end
 
 function drawWifi()
+   local monitor_flag=conky_parse("${exec cat ~/.cache/wetch/monitor_flag}")
+
+   if monitor_flag == 'false' then
+      do return end
+   end
+
    local wireless=conky_parse("${exec /sbin/ifconfig | egrep -o '^w[^:]+'}")
    local link_qual="${wireless_link_qual " .. wireless .. "}"
 
@@ -114,6 +125,12 @@ end
 -- Prints, and draws, ram information
 -------------------------------------
 function drawRamCpu()
+   local monitor_flag=conky_parse("${exec cat ~/.cache/wetch/monitor_flag}")
+
+   if monitor_flag == 'false' then
+      do return end
+   end
+
    circleFill(center, wh, 130, 6, 120, 200, "100", 100, 1, 1, 1, 0.2)
    circleFill(center, wh, 130, 6, 120, 200, "${cpu}", 100, 1, 1, 1, 0.5)
    jprint("cpu", center+105, wh+55, 16, 1, 1, 1, 1, CAIRO_FONT_WEIGHT_NORMAL)
@@ -155,6 +172,12 @@ end
 -- Prints, and draws, battery information
 -------------------------------------
 function drawBattery()
+   local monitor_flag=conky_parse("${exec cat ~/.cache/wetch/monitor_flag}")
+
+   if monitor_flag == 'false' then
+      do return end
+   end
+
    local batteryLevel=tonumber(conky_parse("${battery_percent BAT0}"))
    local r=0.7
    local g=0.7

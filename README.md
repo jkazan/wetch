@@ -38,18 +38,19 @@ information in `wetch.config` as per instructions.
 Usage: wetch [OPTION]
 Options:
   -h   show brief help
+  -m   run wetch with system monitoring
   -w   run wetch with weather features
   -s   run wetch with Slack features
 ```
 
 #### Examples
-##### Run vanilla
+##### Run with only time and system monitoring
 ```sh
-./wetch
+./wetch -m
 ```
 ##### Run with all features
 ```sh
-./wetch -ws
+./wetch -mws
 ```
 
 # Important
