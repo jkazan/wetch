@@ -219,6 +219,8 @@ main() {
 }
 
 source ~/wetch/wetch.config
+touch ~/.cache/wetch/weather_flag
+touch ~/.cache/wetch/slack_flag
 weather_flag='false'
 slack_flag='false'
 verbose='false'
