@@ -136,8 +136,17 @@ cache_weather_update_time() {
 #######################################
 kill_running() {
     killall conky
+
     ps axf \
         | grep wetch/wetch \
+        | grep -v grep \
+        | awk '{print "kill -9 " $1}' \
+        | tac \
+        | sed -n '1!p' \
+        | sh
+
+    ps axf \
+        | grep slack \
         | grep -v grep \
         | awk '{print "kill -9 " $1}' \
         | tac \
@@ -222,6 +231,7 @@ source ~/wetch/wetch.config
 touch ~/.cache/wetch/monitor_flag
 touch ~/.cache/wetch/weather_flag
 touch ~/.cache/wetch/slack_flag
+touch ~/.cache/wetch/spotify_cover_id
 monitor_flag='false'
 weather_flag='false'
 slack_flag='false'
