@@ -68,8 +68,7 @@ end
 function draw_date_time()
    local x=1050
    local y=70
-   jprint(conky_parse("${time %H}:${time %M}"), x, y, 180,
-          1, 1, 1, 0.7, font_n)
+   jprint(conky_parse("${time %H}:${time %M}"), x, y, 180, 1, 1, 1, 0.7, font_n)
    jprint(conky_parse("${execi 999999 LANG='' LC_TIME='' date +'%A'}"),
           x, y-160, 70, 1, 1, 1, 0.7, font_n)
    jprint(conky_parse("${execi 999999 LANG='' LC_TIME='' date +'%B %d'}"),
@@ -88,22 +87,20 @@ function draw_time_circles()
    if H > 11 then
       H = H-12
    end
-   local hourMeter=H+M/60
-   local minuteMeter=M
+   local h_meter=H+M/60
+   local m_meter=M
 
    circleFill(x, y, 65, 6, 0, 360, "12", 12, R, G, B, 0.2)
-   circleFill(x, y, 65, 7, 0, 360, hourMeter, 12, R, G, B, 0.4)
+   circleFill(x, y, 65, 7, 0, 360, h_meter, 12, R, G, B, 0.4)
 
    circleFill(x, y, 76, 4, 0, 360, "60", 60, R, G, B, 0.2)
-   circleFill(x, y, 76, 5, 0, 360, minuteMeter, 60, R, G, B, 0.6)
+   circleFill(x, y, 76, 5, 0, 360, m_meter, 60, R, G, B, 0.6)
 
-   local hourPointer=hourMeter/12*360*math.pi/180-math.pi/2
-   jline(x, y, x+50*math.cos(hourPointer), y+50*math.sin(hourPointer),
-         7,R,G,B,0.2)
+   local h_point=h_meter/12*360*math.pi/180-math.pi/2
+   jline(x, y, x+50*math.cos(h_point), y+50*math.sin(h_point), 7, R, G, B, 0.2)
 
-   local minutePointer=minuteMeter/60*360*math.pi/180-math.pi/2
-   jline(x, y, x+55*math.cos(minutePointer), y+55*math.sin(minutePointer),
-         5,R,G,B,0.2)
+   local m_point=m_meter/60*360*math.pi/180-math.pi/2
+   jline(x, y, x+55*math.cos(m_point), y+55*math.sin(m_point), 5, R, G, B, 0.2)
 end
 
 function draw_wifi()
@@ -120,15 +117,14 @@ function draw_wifi()
 
    if isConnected == 0 or wireless == "" then
       circleFill(x, y, 130, 6, 0, 80, "100", 100, 1, 0, 0, 0.2)
+      jprint("wi-fi", x-40, y-125, 16, 1, 0, 0, 1, font_n)
+      jprint(conky_parse(essid), x-60, y-140, 14, 1, 0, 0, 1, font_n)
    else
       circleFill(x, y, 130, 6, 0, 80, "100", 100, R, G, B, 0.2)
       circleFill(x, y, 130, 6, 0, 80, link_qual, 100, R, G, B, 0.4)
+      jprint("wi-fi", x-40, y-125, 16, R, G, B,1, font_n)
+      jprint(conky_parse(essid), x-60, y-140, 14, R, G, B, 1, font_n)
    end
-
-   jprint("wi-fi", x-40, y-125, 16, R, G, B,1, font_n)
-
-   jprint(conky_parse(essid), x-60, y-140,
-          14, r, g, b, 1, font_n)
 end
 
 -------------------------------------
@@ -138,38 +134,24 @@ function draw_ram()
    local x=0
    local y=0
 
-   local r=R
-   local g=G
-   local b=B
    local ram_usage=tonumber(conky_parse("${memperc}"))
-   if ram_usage > 80 then
-      r=1
-      g=0
-      b=0
-   end
+   local c=get_colors_gt(ram_usage, 80)
 
-   circleFill(x, y, 95, 12, 0, 80, "100", 100, r, g, b, 0.2)
-   circleFill(x, y, 95, 12, 0, 80, ram_usage, 100, r, g, b, 0.5)
-   jprint("ram", x-40, y-90, 16, r, g, b, 1, font_n)
+   circleFill(x, y, 95, 12, 0, 80, "100", 100, c[1], c[2], c[3], 0.2)
+   circleFill(x, y, 95, 12, 0, 80, ram_usage, 100, c[1], c[2], c[3], 0.5)
+   jprint("ram", x-40, y-90, 16, c[1], c[2], c[3], 1, font_n)
 end
 
 function draw_cpu()
    local x=0
    local y=0
 
-   local r=R
-   local g=G
-   local b=B
    local cpu_usage=tonumber(conky_parse("${cpu}"))
-   if cpu_usage > 80 then
-      r=1
-      g=0
-      b=0
-   end
+   local c=get_colors_gt(cpu_usage, 80)
 
-   circleFill(x, y, 130, 6, 120, 200, "100", 100, r, g, b, 0.2)
-   circleFill(x, y, 130, 6, 120, 200, cpu_usage, 100, r, g, b, 0.5)
-   jprint("cpu", x+105, y+55, 16, r, g, b, 1, font_n)
+   circleFill(x, y, 130, 6, 120, 200, "100", 100, c[1], c[2], c[3], 0.2)
+   circleFill(x, y, 130, 6, 120, 200, cpu_usage, 100, c[1], c[2], c[3], 0.5)
+   jprint("cpu", x+105, y+55, 16, c[1], c[2], c[3], 1, font_n)
 
    local start=100
    local length=26
@@ -180,21 +162,21 @@ function draw_cpu()
       circleFill(x, y, 92, 5,
                  start+i*length,
                  start+i*length+stop,
-                 "100", 100, r, g, b, 0.2)
+                 "100", 100, c[1], c[2], c[3], 0.2)
       circleFill(x, y, 92, 5,
                  start+i*length,
                  start+i*length+stop,
-                 cpuinner, 100, r, g, b, 0.5)
+                 cpuinner, 100, c[1], c[2], c[3], 0.5)
 
       local cpuouter="${cpu cpu" .. i+5 .. "}"
       circleFill(x, y, 99, 5,
                  start+i*length,
                  start+i*length+stop,
-                 "100", 100, r, g, b, 0.2)
+                 "100", 100, c[1], c[2], c[3], 0.2)
       circleFill(x, y, 99, 5,
                  start+i*length,
                  start+i*length+stop,
-                 cpuouter, 100, r, g, b, 0.5)
+                 cpuouter, 100, c[1], c[2], c[3], 0.5)
    end
 end
 
@@ -204,19 +186,13 @@ end
 function draw_battery()
    local x=0
    local y=0
-   local r=R
-   local g=G
-   local b=B
-   local batteryLevel=tonumber(conky_parse("${battery_percent BAT0}"))
-   if batteryLevel < 15 then
-      r=1
-      g=0
-      b=0
-   end
 
-   circleFill(x, y, 95, 12, 230, 320, "100", 100, r, g, b, 0.2)
+   local batteryLevel=tonumber(conky_parse("${battery_percent BAT0}"))
+   local c=get_colors_lt(batteryLevel, 15)
+
+   circleFill(x, y, 95, 12, 230, 320, "100", 100, c[1], c[2], c[3], 0.2)
    circleFill(x, y, 95, 12, 230, 320,
-              "${battery_percent BAT0}", 100, r, g, b, 0.5)
+              "${battery_percent BAT0}", 100, c[1], c[2], c[3], 0.5)
 
    isDischargingStr="${if_empty " ..
       "${execi 10 upower -i " ..
@@ -238,20 +214,16 @@ function draw_battery()
    local isFullyCharged=tonumber(conky_parse(isFullyChargedStr))
 
    if isDischarging == 1 then
-      jprint("discharging", x-120, y+90, 16,
-             r, g, b, 1, font_n)
+      jprint("discharging", x-120, y+90, 16, c[1], c[2], c[3], 1, font_n)
       jprint(conky_parse("${battery_time BAT0}"), x-130, y+110, 16,
-             r, g, b, 1, font_n)
+             c[1], c[2], c[3], 1, font_n)
    elseif isCharging == 1 then
-      jprint("charging", x-120, y+90, 16,
-             r, g, b, 1, font_n)
+      jprint("charging", x-120, y+90, 16, c[1], c[2], c[3], 1, font_n)
       jprint(conky_parse("${battery_time BAT0}"), x-130, y+110, 16,
-             r, g, b, 1, font_n)
+             c[1], c[2], c[3], 1, font_n)
    elseif isFullyCharged == 1 then
-      jprint("connected", x-120, y+90, 16,
-             r, g, b, 1, font_n)
-      jprint("fully charged", x-130, y+110, 16,
-             r, g, b, 1, font_n)
+      jprint("connected", x-120, y+90, 16, c[1], c[2], c[3], 1, font_n)
+             jprint("fully charged", x-130, y+110, 16, c[1], c[2], c[3], 1, font_n)
    end
 end
 
@@ -407,19 +379,12 @@ function draw_weather()
    local quality=math.floor(
       (tempval + cloudval + humidityval + windval + weatherval)/23 + 0.5)
 
-   local r=R
-   local g=G
-   local b=B
-   if quality < 30 then
-      r=1
-      g=0
-      b=0
-   end
+   local c=get_colors_lt(quality, 30)
 
-   circleFill(x, y, 130, 6, 265, 330, "100", 100, r, g, b, 0.2)
-   circleFill(x, y, 130, 6, 265, 330, quality, 100, r, g, b, 0.5)
+   circleFill(x, y, 130, 6, 265, 330, "100", 100, c[1], c[2], c[3], 0.2)
+   circleFill(x, y, 130, 6, 265, 330, quality, 100, c[1], c[2], c[3], 0.5)
 
-   jprint("weather", x-160, y+35, 16, r, g, b, 1, font_n)
+   jprint("weather", x-160, y+35, 16, c[1], c[2], c[3], 1, font_n)
 
    jprint("Quality " , txt_x+gap_x*5, txt_y, txt_font_size, R, G, B, 1, font_n)
    jprint(quality .. "%", txt_x+gap_x*5, txt_y+gap_y, txt_font_size,
@@ -508,7 +473,6 @@ end
 function jimage(path, w, h, x, y)
    local image = imlib_load_image(path)
    imlib_context_set_image(image)
-   -- imlib_color_new(1, 1, 1[, 1])
 
    local scaled=imlib_create_cropped_scaled_image(
       0, 0, imlib_image_get_width(),imlib_image_get_height(), w, h)
@@ -578,4 +542,31 @@ function linearGradient(x0, y0, x1, y1, intensity)
       cairo_pattern_destroy (pat);
       cairo_stroke (cr)
    end
+end
+
+
+-------------------------------------
+-- Returns rgb color array: Warning color if a<b else globally defined rgb
+-- @param a value to be tested
+-- @param b limit for warning color
+-------------------------------------
+function get_colors_lt(a, b)
+   local colors={R, G, B}
+   if a < b then
+      colors={1, 0, 0}
+   end
+   return colors
+end
+
+-------------------------------------
+-- Returns rgb color array: Warning color if a>b else globally defined rgb
+-- @param a value to be tested
+-- @param b limit for warning color
+-------------------------------------
+function get_colors_gt(a, b)
+   local colors={R, G, B}
+   if a > b then
+      colors={1, 0, 0}
+   end
+   return colors
 end
