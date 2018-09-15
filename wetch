@@ -202,7 +202,6 @@ restart_conky() {
 #   None
 #######################################
 main() {
-    mkdir -p ~/.cache/wetch/    # Create .cache/wetch dir if non-existing
     cache_weather_update_time   # create .cache/wetch/last_weather_update.txt
     verify_internet_connection  # Verify that internet connection is up
     set_api_key                 # Let function select which API key one to use
@@ -227,17 +226,16 @@ main() {
     fi
 }
 
-source ~/wetch/wetch.config
-touch ~/.cache/wetch/monitor_flag
-touch ~/.cache/wetch/weather_flag
-touch ~/.cache/wetch/slack_flag
-touch ~/.cache/wetch/spotify_cover_id
+source ~/wetch/wetch.config # Source wtch configuration file
+mkdir -p ~/.cache/wetch/    # Create .cache/wetch dir if non-existing
+> ~/.cache/wetch/flags      # Create, or delete content, of flags file
 monitor_flag='false'
 weather_flag='false'
 slack_flag='false'
 verbose='false'
 
 while getopts ":hmwsv" opt; do
+    echo $opt >> ~/.cache/wetch/flags
     case $opt in
         h)  echo "wetch 1.0"
             echo "Conky and lua based widget for system monitoring and more"
@@ -251,7 +249,7 @@ while getopts ":hmwsv" opt; do
             echo "  -s   run wetch with Slack features"
             exit 0
             ;;
-        m) monitor_flag='true' ;;
+        m) monitor_flag='true';;
         w) weather_flag='true' ;;
         s) slack_flag='true' ;;
         v) verbose='true' ;;
@@ -263,9 +261,5 @@ while getopts ":hmwsv" opt; do
            ;;
     esac
 done
-
-echo $monitor_flag > ~/.cache/wetch/monitor_flag
-echo $weather_flag > ~/.cache/wetch/weather_flag
-echo $slack_flag > ~/.cache/wetch/slack_flag
 
 main
