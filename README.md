@@ -1,5 +1,5 @@
 # wetch - conky and lua for system monitoring
-[![N|Solid](https://i.imgur.com/OQfwIqf.jpg)](https://i.imgur.com/OQfwIqf.jpg)
+[![N|Solid](https://i.imgur.com/Zj6cU3j.jpg)](https://i.imgur.com/Zj6cU3j.jpg)
 ![N|Solid](https://img.shields.io/badge/Debian-Tested-green.svg?longCache=true&style=popout-square) ![N|Solid](https://img.shields.io/badge/Ubuntu-Tested-green.svg?longCache=true&style=popout-square) ![N|Solid](https://img.shields.io/badge/License-MIT-blue.svg?longCache=true&style=popout-square)
 ### The following is being monitored: 
 
