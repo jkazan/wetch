@@ -25,8 +25,8 @@ minimum_width=1910,
 
 own_window=true,
 own_window_class="conky_semi",
-own_window_type="override",
--- own_window_type="dock",
+-- own_window_type="override",
+own_window_type="dock",
 own_window_transparent=false,
 own_window_hints="undecorated,below,sticky,skip_taskbar,skip_pager",
 
