@@ -13,9 +13,11 @@
 - RAM usage
 - CPU usage
 - Battery level along with estimated time remaining until empty, or if
-  connected, until full
-- Slack unread messages. This is being tracked even if user is not logged in
-- Spotify information on currently playing artist and title
+charging, until full
+- Slack unread messages. This is being tracked regardless of whether
+  the user is logged in or not
+- Spotify information on currently playing artist, title and album
+  artwork
 
 
 ### Installation
@@ -44,9 +46,9 @@ Options:
 ```
 
 #### Examples
-##### Run with only time and system monitoring
+##### Run with only time, day and date
 ```sh
-./wetch -m
+./wetch
 ```
 ##### Run with all features
 ```sh
