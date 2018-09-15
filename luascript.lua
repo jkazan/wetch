@@ -1,6 +1,5 @@
 require 'cairo'
 require 'imlib2'
--- TODO: Cache in wetch dir instead
 -- TODO: Make independant on location of wetch
 -------------------------------------
 -- Main function
@@ -24,16 +23,14 @@ function conky_main()
    B=1
    trans_x=220
    trans_y=conky_window.height/2
+   local flags=conky_parse("${execi 999999 cat ~/.cache/wetch/flags}")
 
-   local monitor_flag=conky_parse("${exec cat ~/.cache/wetch/monitor_flag}")
-   local weather_flag=conky_parse("${exec cat ~/.cache/wetch/weather_flag}")
-   local slack_flag=conky_parse("${exec cat ~/.cache/wetch/slack_flag}")
 
    -- Set origin coordinates
    cairo_translate(cr,trans_x,trans_y)
 
    -- Call functions to draw wetch
-   if monitor_flag == 'true' then
+   if string.match(flags, "m") then
       draw_centerLine()
       draw_time_circles()
       draw_wifi()
@@ -45,11 +42,11 @@ function conky_main()
 
    draw_date_time()
 
-   if slack_flag == 'true' then
+   if string.match(flags, "s") then
       draw_slack()
    end
 
-   if weather_flag == 'true' then
+   if string.match(flags, "w") then
       draw_weather()
    end
 
@@ -73,9 +70,9 @@ function draw_date_time()
    local y=70
    jprint(conky_parse("${time %H}:${time %M}"), x, y, 180,
           1, 1, 1, 0.7, font_n)
-   jprint(conky_parse("${execi 300 LANG='' LC_TIME='' date +'%A'}"),
+   jprint(conky_parse("${execi 999999 LANG='' LC_TIME='' date +'%A'}"),
           x, y-160, 70, 1, 1, 1, 0.7, font_n)
-   jprint(conky_parse("${execi 300 LANG='' LC_TIME='' date +'%B %d'}"),
+   jprint(conky_parse("${execi 999999 LANG='' LC_TIME='' date +'%B %d'}"),
           x, y+67, 70, 1, 1, 1, 0.7, font_n)
 end
 
@@ -131,7 +128,7 @@ function draw_wifi()
    jprint("wi-fi", x-40, y-125, 16, R, G, B,1, font_n)
 
    jprint(conky_parse(essid), x-60, y-140,
-          14, R, G, B, 1, font_n)
+          14, r, g, b, 1, font_n)
 end
 
 -------------------------------------
@@ -140,43 +137,64 @@ end
 function draw_ram()
    local x=0
    local y=0
-   circleFill(x, y, 95, 12, 0, 80, "100", 100, R, G, B, 0.2)
-   circleFill(x, y, 95, 12, 0, 80, "${memperc}", 100, R, G, B, 0.5)
-   jprint("ram", x-40, y-90, 16, R, G, B, 1, font_n)
+
+   local r=R
+   local g=G
+   local b=B
+   local ram_usage=tonumber(conky_parse("${memperc}"))
+   if ram_usage > 80 then
+      r=1
+      g=0
+      b=0
+   end
+
+   circleFill(x, y, 95, 12, 0, 80, "100", 100, r, g, b, 0.2)
+   circleFill(x, y, 95, 12, 0, 80, ram_usage, 100, r, g, b, 0.5)
+   jprint("ram", x-40, y-90, 16, r, g, b, 1, font_n)
 end
 
 function draw_cpu()
    local x=0
    local y=0
-   circleFill(x, y, 130, 6, 120, 200, "100", 100, R, G, B, 0.2)
-   circleFill(x, y, 130, 6, 120, 200, "${cpu}", 100, R, G, B, 0.5)
-   jprint("cpu", x+105, y+55, 16, R, G, B, 1, font_n)
+
+   local r=R
+   local g=G
+   local b=B
+   local cpu_usage=tonumber(conky_parse("${cpu}"))
+   if cpu_usage > 80 then
+      r=1
+      g=0
+      b=0
+   end
+
+   circleFill(x, y, 130, 6, 120, 200, "100", 100, r, g, b, 0.2)
+   circleFill(x, y, 130, 6, 120, 200, cpu_usage, 100, r, g, b, 0.5)
+   jprint("cpu", x+105, y+55, 16, r, g, b, 1, font_n)
 
    local start=100
    local length=26
    local stop=21
 
-   for i=0, 3, 1
-   do
-      cpuinner="${cpu cpu" .. i+1 .. "}"
+   for i=0, 3, 1 do
+      local cpuinner="${cpu cpu" .. i+1 .. "}"
       circleFill(x, y, 92, 5,
                  start+i*length,
                  start+i*length+stop,
-                 "100", 100, R, G, B, 0.2)
+                 "100", 100, r, g, b, 0.2)
       circleFill(x, y, 92, 5,
                  start+i*length,
                  start+i*length+stop,
-                 cpuinner, 100, R, G, B, 0.5)
+                 cpuinner, 100, r, g, b, 0.5)
 
-      cpuouter="${cpu cpu" .. i+5 .. "}"
+      local cpuouter="${cpu cpu" .. i+5 .. "}"
       circleFill(x, y, 99, 5,
                  start+i*length,
                  start+i*length+stop,
-                 "100", 100, R, G, B, 0.2)
+                 "100", 100, r, g, b, 0.2)
       circleFill(x, y, 99, 5,
                  start+i*length,
                  start+i*length+stop,
-                 cpuouter, 100, R, G, B, 0.5)
+                 cpuouter, 100, r, g, b, 0.5)
    end
 end
 
@@ -258,7 +276,7 @@ function draw_spotify()
              x+110, y, 16, 0.51, 0.74, 0, 1, CAIRO_FONT_WEIGHT_BOLD)
 
       -- Cover (draw album cover without cache for it to update on change)
-      conky_parse("${execi 1 ~/wetch/spotify-cover.sh}")
+      conky_parse("${exec  ~/wetch/spotify-cover.sh}")
 
       local image = imlib_load_image_without_cache(
          conky_parse("/home/${uid_name 1000}/.cache/wetch/current.jpg"))
@@ -280,9 +298,10 @@ end
 function draw_weather()
    local x=0
    local y=0
-   local txt_x=400
-   local txt_y=20
-   local gap_x=100
+   local txt_font_size=16
+   local txt_x=340
+   local txt_y=4 + txt_font_size
+   local gap_x=90 + 2*txt_font_size
    local gap_y=20
 
    local temp=conky_parse("${exec jq .[].Temperature.Metric.Value " ..
@@ -307,25 +326,25 @@ function draw_weather()
 
    -- Weather text information
    jprint(conky_parse(temp .. " °C"),
-          txt_x-20, txt_y+15, 30, R, G, B, 0.8, font_n)
+          txt_x, txt_y+15, txt_font_size*2, R, G, B, 0.8, font_n)
 
-   jprint("Feels like", txt_x+gap_x, txt_y, 16, R, G, B, 1, font_n)
+   jprint("Feels like", txt_x+gap_x, txt_y, txt_font_size, R, G, B, 1, font_n)
 
    jprint(conky_parse(
              "${exec jq .[].RealFeelTemperatureShade.Metric.Value " ..
                 "~/.cache/wetch/weather.json | awk '{print int($1+0.5)}'} °C"),
-          txt_x+gap_x, txt_y+gap_y, 16, R, G, B, 1, font_n)
+          txt_x+gap_x, txt_y+gap_y, txt_font_size, R, G, B, 1, font_n)
 
-   jprint("Cloudiness", txt_x+gap_x*2, txt_y, 16, R, G, B, 1, font_n)
+   jprint("Cloudiness", txt_x+gap_x*2, txt_y, txt_font_size, R, G, B, 1, font_n)
    jprint(clouds .."%",
-          txt_x+gap_x*2, txt_y+gap_y, 16, R, G, B, 1, font_n)
+          txt_x+gap_x*2, txt_y+gap_y, txt_font_size, R, G, B, 1, font_n)
 
-   jprint("Humidity", txt_x+gap_x*3, txt_y, 16, R, G, B, 1, font_n)
+   jprint("Humidity", txt_x+gap_x*3, txt_y, txt_font_size, R, G, B, 1, font_n)
    jprint(humidity .. "%",
-          txt_x+gap_x*3, txt_y+gap_y, 16, R, G, B, 1, font_n)
+          txt_x+gap_x*3, txt_y+gap_y, txt_font_size, R, G, B, 1, font_n)
 
-   jprint("Wind", txt_x+gap_x*4, txt_y, 16, R, G, B, 1, font_n)
-   jprint(windStr, txt_x+gap_x*4, txt_y+gap_y, 16,
+   jprint("Wind", txt_x+gap_x*4, txt_y, txt_font_size, R, G, B, 1, font_n)
+   jprint(windStr, txt_x+gap_x*4, txt_y+gap_y, txt_font_size,
           R, G, B, 1, font_n)
 
    -- Parse time to determine location of weather icons and set icons
@@ -347,7 +366,7 @@ function draw_weather()
       local hourMark=timeModulo(tonumber(conky_parse(jsStr)))
 
       jimage(conky_parse("/home/${uid_name 1000}/.cache/wetch/forecast-" ..
-                            tostring(i+1) ..".png"),
+                            tostring(i) ..".png"),
              50, 30, icon_x[hourMark], icon_y[hourMark])
    end
 
@@ -388,14 +407,23 @@ function draw_weather()
    local quality=math.floor(
       (tempval + cloudval + humidityval + windval + weatherval)/23 + 0.5)
 
-   circleFill(x, y, 130, 6, 265, 330, "100", 100, R, G, B, 0.2)
-   circleFill(x, y, 130, 6, 265, 330, quality, 100, R, G, B, 0.5)
+   local r=R
+   local g=G
+   local b=B
+   if quality < 30 then
+      r=1
+      g=0
+      b=0
+   end
 
-   jprint("weather", x-160, y+35, 16, R, G, B, 1, font_n)
+   circleFill(x, y, 130, 6, 265, 330, "100", 100, r, g, b, 0.2)
+   circleFill(x, y, 130, 6, 265, 330, quality, 100, r, g, b, 0.5)
 
-   -- jprint("Quality " , txt_x+gap_x*5, txt_y, 16,R, G, B, 1, font_n)
-   -- jprint(quality .. "%", txt_x+gap_x*5, txt_y+gap_y, 16,
-   --        R, G, B, 1, font_n)
+   jprint("weather", x-160, y+35, 16, r, g, b, 1, font_n)
+
+   jprint("Quality " , txt_x+gap_x*5, txt_y, txt_font_size, R, G, B, 1, font_n)
+   jprint(quality .. "%", txt_x+gap_x*5, txt_y+gap_y, txt_font_size,
+          R, G, B, 1, font_n)
 end
 
 -------------------------------------
@@ -540,8 +568,7 @@ end
 -- @param intensity color intensity
 -------------------------------------
 function linearGradient(x0, y0, x1, y1, intensity)
-   for i=1, intensity, 1
-   do
+   for i=1, intensity, 1 do
       local pat=cairo_pattern_create_linear (x0, y0, x1, y1);
       cairo_pattern_add_color_stop_rgba (pat, 1, 0, 0, 0, 0.0);
       cairo_pattern_add_color_stop_rgba (pat, 0, 0, 0, 0, 0.9);
