@@ -1,6 +1,7 @@
 require 'cairo'
 require 'imlib2'
-
+-- TODO: Cache in wetch dir instead
+-- TODO: Make independant on location of wetch
 -------------------------------------
 -- Main function
 -------------------------------------
@@ -13,98 +14,77 @@ function conky_main()
                                         conky_window.visual,
                                         conky_window.width,
                                         conky_window.height)
+
+   -- Global variables
    cr = cairo_create(cs)
-
-   ww=conky_window.width/2
-   wh=conky_window.height/2
-   center=220
-   R=0.6
-   G=1
+   font_n=CAIRO_FONT_WEIGHT_NORMAL
+   font_b=CAIRO_FONT_WEIGHT_BOLD
+   R=0.8
+   G=0.8
    B=1
+   trans_x=220
+   trans_y=conky_window.height/2
 
-   drawBackground()
-   drawTimeCircles()
-   drawDateTime()
-   drawRamCpu()
-   drawWifi()
-   drawBattery()
-   drawSpotify()
-   drawWeather()
-   slack()
+   local monitor_flag=conky_parse("${exec cat ~/.cache/wetch/monitor_flag}")
+   local weather_flag=conky_parse("${exec cat ~/.cache/wetch/weather_flag}")
+   local slack_flag=conky_parse("${exec cat ~/.cache/wetch/slack_flag}")
+
+   -- Set origin coordinates
+   cairo_translate(cr,trans_x,trans_y)
+
+   -- Call functions to draw wetch
+   if monitor_flag == 'true' then
+      draw_centerLine()
+      draw_time_circles()
+      draw_wifi()
+      draw_ram()
+      draw_cpu()
+      draw_battery()
+      draw_spotify()
+   end
+
+   draw_date_time()
+
+   if slack_flag == 'true' then
+      draw_slack()
+   end
+
+   if weather_flag == 'true' then
+      draw_weather()
+   end
 
    cairo_destroy(cr)
    cairo_surface_destroy(cs)
    cr=nil
 end
 
-function drawBackground()
-   -- Gradient from left to right
-   -- local x=0
-   -- local y=0
-   -- local w=ww*2
-   -- local h=wh*2
-   -- local pat=cairo_pattern_create_linear (x, y, w, y);
-   -- cairo_pattern_add_color_stop_rgba (pat, 1, 0, 0, 0, 0.0);
-   -- cairo_pattern_add_color_stop_rgba (pat, 0, 0, 0, 0, 0.9);
-   -- cairo_rectangle (cr, x, y, w, h);
-   -- cairo_set_source (cr, pat);
-   -- cairo_fill (cr);
-   -- cairo_pattern_destroy (pat);
-   -- cairo_stroke (cr)
+function draw_centerLine()
+   local x0=220
+   local x1=1000
+   local gradient_size=150
 
-   -- Gradient from center down
-   local x=0
-   local y=wh
-   local w=ww*2
-   local h=wh
-   local pat=cairo_pattern_create_linear (x, y, x, y+200);
-   cairo_pattern_add_color_stop_rgba (pat, 1, 0, 0, 0, 0);
-   cairo_pattern_add_color_stop_rgba (pat, 0, 0, 0, 0, 1);
-   cairo_rectangle (cr, x, y, w, h);
-   cairo_set_source (cr, pat);
-   cairo_fill (cr);
-   cairo_pattern_destroy (pat);
-   cairo_stroke (cr)
+   linearGradient(-x0, 0, -x0, gradient_size, 1)
+   linearGradient(-x0, 0, -x0, -gradient_size, 1)
+   jline(x0, 0, x1, 0 ,3 ,R ,G ,B ,0.8)
+end
 
-   -- Gradient from center up
-   local x=0
-   local y=wh/2
-   local w=ww*2
-   local h=wh
-   local pat=cairo_pattern_create_linear (x, wh, x, wh-200);
-   cairo_pattern_add_color_stop_rgba (pat, 1, 0, 0, 0, 0);
-   cairo_pattern_add_color_stop_rgba (pat, 0, 0, 0, 0, 1);
-   cairo_rectangle (cr, x, y-h/2, w, h);
-   cairo_set_source (cr, pat);
-   cairo_fill (cr);
-   cairo_pattern_destroy (pat);
-   cairo_stroke (cr)
-
-   -- Radial gradient
-   -- local x=center
-   -- local y=wh
-   -- local w=ww*2
-   -- local h=wh/2
-   -- local pat=cairo_pattern_create_radial (x, y, 170, x, y, 250);
-   -- cairo_pattern_add_color_stop_rgba (pat, 1, 0, 0, 0, 0);
-   -- cairo_pattern_add_color_stop_rgba (pat, 0, 0, 0, 0, 1);
-   -- cairo_arc(cr, x, y, 500, 0, math.pi*2);
-   -- cairo_set_source (cr, pat);
-   -- cairo_fill (cr);
-   -- cairo_pattern_destroy (pat);
-   -- cairo_stroke (cr)
+function draw_date_time()
+   local x=1050
+   local y=70
+   jprint(conky_parse("${time %H}:${time %M}"), x, y, 180,
+          1, 1, 1, 0.7, font_n)
+   jprint(conky_parse("${execi 300 LANG='' LC_TIME='' date +'%A'}"),
+          x, y-160, 70, 1, 1, 1, 0.7, font_n)
+   jprint(conky_parse("${execi 300 LANG='' LC_TIME='' date +'%B %d'}"),
+          x, y+67, 70, 1, 1, 1, 0.7, font_n)
 end
 
 -------------------------------------
 -- Prints, and draws, time information
 -------------------------------------
-function drawTimeCircles()
-   local monitor_flag=conky_parse("${exec cat ~/.cache/wetch/monitor_flag}")
-
-   if monitor_flag == 'false' then
-      do return end
-   end
-
+function draw_time_circles()
+   local x=0
+   local y=0
    local H=tonumber(conky_parse("${time %H}"))
    local M=tonumber(conky_parse("${time %M}"))
    local S=tonumber(conky_parse("${time %S}"))
@@ -114,47 +94,24 @@ function drawTimeCircles()
    local hourMeter=H+M/60
    local minuteMeter=M
 
-   circleFill(center, wh, 65, 6, 0, 360, "12", 12, R, G, B, 0.2)
-   circleFill(center, wh, 65, 7, 0, 360, hourMeter, 12, R, G, B, 0.4)
+   circleFill(x, y, 65, 6, 0, 360, "12", 12, R, G, B, 0.2)
+   circleFill(x, y, 65, 7, 0, 360, hourMeter, 12, R, G, B, 0.4)
 
-   circleFill(center, wh, 76, 4, 0, 360, "60", 60, R, G, B, 0.2)
-   circleFill(center, wh, 76, 5, 0, 360, minuteMeter, 60, R, G, B, 0.6)
+   circleFill(x, y, 76, 4, 0, 360, "60", 60, R, G, B, 0.2)
+   circleFill(x, y, 76, 5, 0, 360, minuteMeter, 60, R, G, B, 0.6)
 
    local hourPointer=hourMeter/12*360*math.pi/180-math.pi/2
-   jline(center+0*math.cos(hourPointer),
-         wh+0*math.sin(hourPointer),
-         center+50*math.cos(hourPointer),
-         wh+50*math.sin(hourPointer),
+   jline(x, y, x+50*math.cos(hourPointer), y+50*math.sin(hourPointer),
          7,R,G,B,0.2)
 
    local minutePointer=minuteMeter/60*360*math.pi/180-math.pi/2
-   jline(center+0*math.cos(minutePointer),
-         wh+0*math.sin(minutePointer),
-         center+55*math.cos(minutePointer),
-         wh+55*math.sin(minutePointer),
+   jline(x, y, x+55*math.cos(minutePointer), y+55*math.sin(minutePointer),
          5,R,G,B,0.2)
-
-   jline(center+220, wh, center+1000, wh,3,R,G,B,0.8)
 end
 
-function drawDateTime()
-   local xoffset=1250
-   local yoffset=wh+70
-   jprint(conky_parse("${time %H}:${time %M}"), xoffset, yoffset, 180,
-          1, 1, 1, 0.7, CAIRO_FONT_WEIGHT_NORMAL)
-   jprint(conky_parse("${execi 300 LANG='' LC_TIME='' date +'%A'}"),
-          xoffset, yoffset-170, 70, 1, 1, 1, 0.7, CAIRO_FONT_WEIGHT_NORMAL)
-   jprint(conky_parse("${execi 300 LANG='' LC_TIME='' date +'%B %d'}"),
-          xoffset, yoffset+80, 70, 1, 1, 1, 0.7, CAIRO_FONT_WEIGHT_NORMAL)
-end
-
-function drawWifi()
-   local monitor_flag=conky_parse("${exec cat ~/.cache/wetch/monitor_flag}")
-
-   if monitor_flag == 'false' then
-      do return end
-   end
-
+function draw_wifi()
+   local x=0
+   local y=0
    local wireless=conky_parse("${exec /sbin/ifconfig | egrep -o '^w[^:]+'}")
    local link_qual="${wireless_link_qual " .. wireless .. "}"
 
@@ -165,43 +122,35 @@ function drawWifi()
                                           wireless .. "}1${else}0${endif}"))
 
    if isConnected == 0 or wireless == "" then
-      circleFill(center, wh, 130, 6, 0, 80, "100", 100, 1, 0, 0, 0.2)
+      circleFill(x, y, 130, 6, 0, 80, "100", 100, 1, 0, 0, 0.2)
    else
-      circleFill(center, wh, 130, 6, 0, 80, "100", 100, R, G, B, 0.2)
-      circleFill(center, wh, 130, 6, 0, 80, link_qual, 100, R, G, B, 0.4)
+      circleFill(x, y, 130, 6, 0, 80, "100", 100, R, G, B, 0.2)
+      circleFill(x, y, 130, 6, 0, 80, link_qual, 100, R, G, B, 0.4)
    end
 
-   jprint("wi-fi",
-          center-40,
-          wh-125,
-          16,R,G,B,1,
-          CAIRO_FONT_WEIGHT_NORMAL)
+   jprint("wi-fi", x-40, y-125, 16, R, G, B,1, font_n)
 
-   jprint(conky_parse(essid),
-          center-40,
-          wh-140,
-          14,R,G,B,1,
-          CAIRO_FONT_WEIGHT_NORMAL)
+   jprint(conky_parse(essid), x-60, y-140,
+          14, R, G, B, 1, font_n)
 end
 
 -------------------------------------
 -- Prints, and draws, ram information
 -------------------------------------
-function drawRamCpu()
-   local monitor_flag=conky_parse("${exec cat ~/.cache/wetch/monitor_flag}")
+function draw_ram()
+   local x=0
+   local y=0
+   circleFill(x, y, 95, 12, 0, 80, "100", 100, R, G, B, 0.2)
+   circleFill(x, y, 95, 12, 0, 80, "${memperc}", 100, R, G, B, 0.5)
+   jprint("ram", x-40, y-90, 16, R, G, B, 1, font_n)
+end
 
-   if monitor_flag == 'false' then
-      do return end
-   end
-
-   circleFill(center, wh, 130, 6, 120, 200, "100", 100, R, G, B, 0.2)
-   circleFill(center, wh, 130, 6, 120, 200, "${cpu}", 100, R, G, B, 0.5)
-   jprint("cpu", center+105, wh+55, 16, R, G, B, 1, CAIRO_FONT_WEIGHT_NORMAL)
-
-
-   circleFill(center, wh, 95, 12, 0, 80, "100", 100, R, G, B, 0.2)
-   circleFill(center, wh, 95, 12, 0, 80, "${memperc}", 100, R, G, B, 0.5)
-   jprint("ram", center-40, wh-90, 16, R, G, B, 1, CAIRO_FONT_WEIGHT_NORMAL)
+function draw_cpu()
+   local x=0
+   local y=0
+   circleFill(x, y, 130, 6, 120, 200, "100", 100, R, G, B, 0.2)
+   circleFill(x, y, 130, 6, 120, 200, "${cpu}", 100, R, G, B, 0.5)
+   jprint("cpu", x+105, y+55, 16, R, G, B, 1, font_n)
 
    local start=100
    local length=26
@@ -210,21 +159,21 @@ function drawRamCpu()
    for i=0, 3, 1
    do
       cpuinner="${cpu cpu" .. i+1 .. "}"
-      circleFill(center, wh, 92, 5,
+      circleFill(x, y, 92, 5,
                  start+i*length,
                  start+i*length+stop,
                  "100", 100, R, G, B, 0.2)
-      circleFill(center, wh, 92, 5,
+      circleFill(x, y, 92, 5,
                  start+i*length,
                  start+i*length+stop,
                  cpuinner, 100, R, G, B, 0.5)
 
       cpuouter="${cpu cpu" .. i+5 .. "}"
-      circleFill(center, wh, 99, 5,
+      circleFill(x, y, 99, 5,
                  start+i*length,
                  start+i*length+stop,
                  "100", 100, R, G, B, 0.2)
-      circleFill(center, wh, 99, 5,
+      circleFill(x, y, 99, 5,
                  start+i*length,
                  start+i*length+stop,
                  cpuouter, 100, R, G, B, 0.5)
@@ -234,25 +183,21 @@ end
 -------------------------------------
 -- Prints, and draws, battery information
 -------------------------------------
-function drawBattery()
-   local monitor_flag=conky_parse("${exec cat ~/.cache/wetch/monitor_flag}")
-
-   if monitor_flag == 'false' then
-      do return end
-   end
-
-   local batteryLevel=tonumber(conky_parse("${battery_percent BAT0}"))
+function draw_battery()
+   local x=0
+   local y=0
    local r=R
    local g=G
    local b=B
+   local batteryLevel=tonumber(conky_parse("${battery_percent BAT0}"))
    if batteryLevel < 15 then
       r=1
       g=0
       b=0
    end
 
-   circleFill(center, wh, 95, 12, 230, 320, "100", 100, r, g, b, 0.2)
-   circleFill(center, wh, 95, 12, 230, 320,
+   circleFill(x, y, 95, 12, 230, 320, "100", 100, r, g, b, 0.2)
+   circleFill(x, y, 95, 12, 230, 320,
               "${battery_percent BAT0}", 100, r, g, b, 0.5)
 
    isDischargingStr="${if_empty " ..
@@ -275,32 +220,70 @@ function drawBattery()
    local isFullyCharged=tonumber(conky_parse(isFullyChargedStr))
 
    if isDischarging == 1 then
-      jprint("discharging", center-120, wh+90, 16,
-             r, g, b, 1, CAIRO_FONT_WEIGHT_NORMAL)
-      jprint(conky_parse("${battery_time BAT0}"), center-130, wh+110, 16,
-             r, g, b, 1, CAIRO_FONT_WEIGHT_NORMAL)
+      jprint("discharging", x-120, y+90, 16,
+             r, g, b, 1, font_n)
+      jprint(conky_parse("${battery_time BAT0}"), x-130, y+110, 16,
+             r, g, b, 1, font_n)
    elseif isCharging == 1 then
-      jprint("charging", center-120, wh+90, 16,
-             r, g, b, 1, CAIRO_FONT_WEIGHT_NORMAL)
-      jprint(conky_parse("${battery_time BAT0}"), center-130, wh+110, 16,
-             r, g, b, 1, CAIRO_FONT_WEIGHT_NORMAL)
+      jprint("charging", x-120, y+90, 16,
+             r, g, b, 1, font_n)
+      jprint(conky_parse("${battery_time BAT0}"), x-130, y+110, 16,
+             r, g, b, 1, font_n)
    elseif isFullyCharged == 1 then
-      jprint("connected", center-120, wh+90, 16,
-             r, g, b, 1, CAIRO_FONT_WEIGHT_NORMAL)
-      jprint("fully charged", center-130, wh+110, 16,
-             r, g, b, 1, CAIRO_FONT_WEIGHT_NORMAL)
+      jprint("connected", x-120, y+90, 16,
+             r, g, b, 1, font_n)
+      jprint("fully charged", x-130, y+110, 16,
+             r, g, b, 1, font_n)
+   end
+end
+
+-------------------------------------
+-- Calls external script to print currently playing artist, track and album
+-- artwork in Spotify
+-------------------------------------
+function draw_spotify()
+   local x=220
+   local y=-10
+
+   local isRunning=tonumber(conky_parse("${if_running spotify}1" ..
+                                        "${else}0${endif}"))
+
+   if isRunning == 1 then
+      -- Artist
+      jprint(conky_parse("${exec ~/wetch/spotify-artist.sh}"),
+             x+110, y-20, 16, 0.51, 0.74, 0, 1, CAIRO_FONT_WEIGHT_BOLD)
+
+      -- Title
+      jprint(conky_parse("${exec ~/wetch/spotify-title.sh}"),
+             x+110, y, 16, 0.51, 0.74, 0, 1, CAIRO_FONT_WEIGHT_BOLD)
+
+      -- Cover (draw album cover without cache for it to update on change)
+      conky_parse("${execi 1 ~/wetch/spotify-cover.sh}")
+
+      local image = imlib_load_image_without_cache(
+         conky_parse("/home/${uid_name 1000}/.cache/wetch/current.jpg"))
+
+      imlib_context_set_image(image)
+
+      local scaled=imlib_create_cropped_scaled_image(
+         0, 0, imlib_image_get_width(),imlib_image_get_height(), 100, 100)
+
+      imlib_context_set_image(scaled)
+      imlib_render_image_on_drawable(trans_x+x, trans_y+y-100)
+      imlib_free_image()
    end
 end
 
 -------------------------------------
 -- Uses cached data to draw weather icons and weather data
 -------------------------------------
-function drawWeather()
-   local weather_flag=conky_parse("${exec cat ~/.cache/wetch/weather_flag}")
-
-   if weather_flag == 'false' then
-      do return end
-   end
+function draw_weather()
+   local x=0
+   local y=0
+   local txt_x=400
+   local txt_y=20
+   local gap_x=100
+   local gap_y=20
 
    local temp=conky_parse("${exec jq .[].Temperature.Metric.Value " ..
                              "~/.cache/wetch/weather.json " ..
@@ -319,63 +302,57 @@ function drawWeather()
 
    local windStr=conky_parse(wind .. " m/s " ..
                                 "${exec jq .[].Wind.Direction.Localized " ..
-                                "~/.cache/wetch/weather.json | cut -d: -f2 | tr -d '\"'}")
+                                "~/.cache/wetch/weather.json " ..
+                                "| cut -d: -f2 | tr -d '\"'}")
 
    -- Weather text information
-   local wtx=center+400
-   local wty=wh+20
-   local gapx=100
-   local gapy=20
-
    jprint(conky_parse(temp .. " °C"),
-          wtx-20, wty+15, 30, R, G, B, 0.8, CAIRO_FONT_WEIGHT_NORMAL)
+          txt_x-20, txt_y+15, 30, R, G, B, 0.8, font_n)
 
-   jprint("Feels like",wtx+gapx,wty,16,R,G,B,1,CAIRO_FONT_WEIGHT_NORMAL)
+   jprint("Feels like", txt_x+gap_x, txt_y, 16, R, G, B, 1, font_n)
+
    jprint(conky_parse(
              "${exec jq .[].RealFeelTemperatureShade.Metric.Value " ..
                 "~/.cache/wetch/weather.json | awk '{print int($1+0.5)}'} °C"),
-          wtx+gapx, wty+gapy, 16, R, G, B, 1, CAIRO_FONT_WEIGHT_NORMAL)
+          txt_x+gap_x, txt_y+gap_y, 16, R, G, B, 1, font_n)
 
-
-   jprint("Cloudiness",wtx+gapx*2,wty,16,R,G,B,1,CAIRO_FONT_WEIGHT_NORMAL)
+   jprint("Cloudiness", txt_x+gap_x*2, txt_y, 16, R, G, B, 1, font_n)
    jprint(clouds .."%",
-          wtx+gapx*2, wty+gapy, 16, R, G, B, 1, CAIRO_FONT_WEIGHT_NORMAL)
+          txt_x+gap_x*2, txt_y+gap_y, 16, R, G, B, 1, font_n)
 
-   jprint("Humidity",wtx+gapx*3,wty,16,R,G,B,1,CAIRO_FONT_WEIGHT_NORMAL)
+   jprint("Humidity", txt_x+gap_x*3, txt_y, 16, R, G, B, 1, font_n)
    jprint(humidity .. "%",
-          wtx+gapx*3, wty+gapy, 16, R, G, B, 1, CAIRO_FONT_WEIGHT_NORMAL)
+          txt_x+gap_x*3, txt_y+gap_y, 16, R, G, B, 1, font_n)
 
-   jprint("Wind",wtx+gapx*4,wty,16,R,G,B,1,CAIRO_FONT_WEIGHT_NORMAL)
-   jprint(windStr, wtx+gapx*4, wty+gapy, 16, R, G, B, 1, CAIRO_FONT_WEIGHT_NORMAL)
-
-   -- jprint(conky_parse("Updated ${exec echo $(date -r " ..
-   --                       "~/.cache/wetch/last_weather_update.txt) " ..
-   --                       "| grep -o '[0-9][0-9]:[0-9][0-9]:[0-9][0-9]'}"),
-   --        wtx, wty0, 16, R, G, B, 1, CAIRO_FONT_WEIGHT_NORMAL)
+   jprint("Wind", txt_x+gap_x*4, txt_y, 16, R, G, B, 1, font_n)
+   jprint(windStr, txt_x+gap_x*4, txt_y+gap_y, 16,
+          R, G, B, 1, font_n)
 
    -- Parse time to determine location of weather icons and set icons
-   local x={center+62, center+121, center+144, center+122,
-            center+60, center-25, center-110, center-173,
-            center-195, center-173, center-110, center-25}
+   -- Must need trans_x and trans_y as imlib does not know translation
+   local icon_x={trans_x+x+62, trans_x+x+121, trans_x+x+144, trans_x+x+122,
+                 trans_x+x+60, trans_x+x-25, trans_x+x-110, trans_x+x-173,
+                 trans_x+x-195, trans_x+x-173, trans_x+x-110, trans_x+x-25}
 
-   local y={wh-160, wh-99, wh-15, wh+70,
-            wh+133, wh+155, wh+133, wh+70,
-            wh-15, wh-99, wh-160, wh-184}
+   local icon_y={trans_y+y-160, trans_y+y-99, trans_y+y-15, trans_y+y+70,
+                 trans_y+y+133, trans_y+y+155, trans_y+y+133, trans_y+y+70,
+                 trans_y+y-15, trans_y+y-99, trans_y+y-160, trans_y+y-184}
 
    local jsStr=""
    for i=0, 11, 1 do
-      jsStr="${exec jq .[" .. tostring(i) .. "].DateTime ~/.cache/wetch/forecast.json " ..
+      jsStr="${exec jq .[" .. tostring(i) ..
+         "].DateTime ~/.cache/wetch/forecast.json " ..
          "| grep -o T[0-9][0-9] | grep -o [0-9][0-9]}"
 
       local hourMark=timeModulo(tonumber(conky_parse(jsStr)))
 
       jimage(conky_parse("/home/${uid_name 1000}/.cache/wetch/forecast-" ..
                             tostring(i+1) ..".png"),
-             50, 30, x[hourMark], y[hourMark])
+             50, 30, icon_x[hourMark], icon_y[hourMark])
    end
 
    jimage(conky_parse("/home/${uid_name 1000}/.cache/wetch/weather.png"),
-          75, 45, center-38, wh-20)
+          75, 45, trans_x+x-38, trans_y+y-20)
 
    -- Weather quality
    local weatherstr=conky_parse("${exec jq .[].WeatherText " ..
@@ -411,104 +388,35 @@ function drawWeather()
    local quality=math.floor(
       (tempval + cloudval + humidityval + windval + weatherval)/23 + 0.5)
 
-   circleFill(center, wh, 130, 6, 265, 330, "100", 100, R, G, B, 0.2)
-   circleFill(center, wh, 130, 6, 265, 330, quality, 100, R, G, B, 0.5)
+   circleFill(x, y, 130, 6, 265, 330, "100", 100, R, G, B, 0.2)
+   circleFill(x, y, 130, 6, 265, 330, quality, 100, R, G, B, 0.5)
 
-   jprint("weather", center-160, wh+35, 16,
-          R, G, B, 1, CAIRO_FONT_WEIGHT_NORMAL)
+   jprint("weather", x-160, y+35, 16, R, G, B, 1, font_n)
 
-   jprint("Quality " .. quality .. "%", wtx, wty0, 16,
-          R, G, B, 1, CAIRO_FONT_WEIGHT_NORMAL)
-
-   -- Weather text background
-   -- local x=center-190
-   -- local y=wh+200
-   -- local w=200
-   -- local h=150
-   -- local pat=cairo_pattern_create_linear (x+w, h, x, h);
-   -- cairo_pattern_add_color_stop_rgba (pat, 1, R, G, B, 0.2);
-   -- cairo_pattern_add_color_stop_rgba (pat, 0, 0, 0, 0, 0.0);
-   -- cairo_rectangle (cr, x, y, w, h);
-   -- cairo_set_source (cr, pat);
-   -- cairo_fill (cr);
-   -- cairo_pattern_destroy (pat);
-   -- cairo_stroke (cr)
-   -- jline(center-190, wh+60, center-190, wh+200, 3,R,G,B,0.4)
-end
-
--------------------------------------
--- Calls external script to print currently playing artist, track and album
--- artwork in Spotify
--------------------------------------
-function drawSpotify()
-   local isRunning=tonumber(conky_parse("${if_running spotify}1" ..
-                                        "${else}0${endif}"))
-
-   if isRunning == 1 then
-      -- Background
-      -- local x=center+300
-      -- local y=wh-100
-      -- local w=600
-      -- local h=100
-      -- local pat=cairo_pattern_create_linear (x+w, h, x, h);
-      -- cairo_pattern_add_color_stop_rgba (pat, 1, 0, 0, 0, 1);
-      -- cairo_pattern_add_color_stop_rgba (pat, 0, 0, 0, 0, 0.0);
-      -- cairo_rectangle (cr, x, y, w, h);
-      -- cairo_set_source (cr, pat);
-      -- cairo_fill (cr);
-      -- cairo_pattern_destroy (pat);
-
-      -- jimage(conky_parse("/home/${uid_name 1000}/wetch/spotify-client.png"),
-      --        40, 40, center+200, wh-50)
-
-      conky_parse("${execi 3 ~/wetch/spotify-cover.sh}")
-      local spotifyx=center+220
-      local spotifyy=wh-10
-
-      local image = imlib_load_image_without_cache(
-         conky_parse("/home/${uid_name 1000}/.cache/wetch/current.jpg"))
-      imlib_context_set_image(image)
-      local scaled=imlib_create_cropped_scaled_image(
-         0, 0, imlib_image_get_width(),imlib_image_get_height(), 100, 100)
-      imlib_context_set_image(scaled)
-      imlib_render_image_on_drawable(spotifyx, spotifyy-100)
-      imlib_free_image()
-
-      jprint(conky_parse("${exec ~/wetch/spotify-artist.sh} - " ..
-                            "${exec ~/wetch/spotify-title.sh}"),
-             spotifyx+110, spotifyy, 16, 0.51, 0.74, 0, 1, CAIRO_FONT_WEIGHT_BOLD)
-   end
+   -- jprint("Quality " , txt_x+gap_x*5, txt_y, 16,R, G, B, 1, font_n)
+   -- jprint(quality .. "%", txt_x+gap_x*5, txt_y+gap_y, 16,
+   --        R, G, B, 1, font_n)
 end
 
 -------------------------------------
 -- Calls external script to pull number of unread Slack messages
 -------------------------------------
-function slack()
-   local slack_flag=conky_parse("${exec cat ~/.cache/wetch/slack_flag}")
-
-   if slack_flag == 'false' then
-      do return end
-   end
-
-   local slackx=center+250
-   local slacky=wh+10
+function draw_slack()
+   local x=250
+   local y=10
 
    jimage(conky_parse("/home/${uid_name 1000}/wetch/slack-web.png"),
-          30, 30, slackx-25, slacky)
+          30, 30, trans_x+x-25, trans_y+y)
 
    local unread=tonumber(conky_parse("${execi 5 ~/wetch/slack.sh}"))
 
    if unread > 0 then
-      -- circleFill(slackx+4, slacky+5, 5, 9, 0, 360, "100", 100, 0.64, 0, 0, 1)
-      cairo_arc(cr, slackx+4, slacky+5, 7, 0, 2*math.pi);
-      cairo_set_source_rgba(cr,0.64, 0, 0, 1)
-      cairo_fill(cr);
+      circleFill(x+4, y+5, 5, 9, 0, 360, "100", 100, 0.64, 0, 0, 1)
 
-
-      cairo_select_font_face(cr, "Droid Sans", CAIRO_FONT_WEIGHT_BOLD, face)
+      cairo_select_font_face(cr, "Droid Sans", font_b, face)
       cairo_set_font_size (cr, 13)
       cairo_set_source_rgba (cr, 1, 1, 1, 1)
-      cairo_move_to (cr, slackx, slacky+9)
+      cairo_move_to (cr, x, y+9)
       cairo_show_text (cr, unread)
       cairo_stroke (cr)
    end
@@ -572,6 +480,7 @@ end
 function jimage(path, w, h, x, y)
    local image = imlib_load_image(path)
    imlib_context_set_image(image)
+   -- imlib_color_new(1, 1, 1[, 1])
 
    local scaled=imlib_create_cropped_scaled_image(
       0, 0, imlib_image_get_width(),imlib_image_get_height(), w, h)
@@ -620,4 +529,26 @@ function timeModulo(t)
    end
 
    return t
+end
+
+-------------------------------------
+-- Draws linear gradient
+-- @param x0 start x coordinate
+-- @param y0 start y coordinate
+-- @param x1 end x coordinate
+-- @param y1 end y coordinate
+-- @param intensity color intensity
+-------------------------------------
+function linearGradient(x0, y0, x1, y1, intensity)
+   for i=1, intensity, 1
+   do
+      local pat=cairo_pattern_create_linear (x0, y0, x1, y1);
+      cairo_pattern_add_color_stop_rgba (pat, 1, 0, 0, 0, 0.0);
+      cairo_pattern_add_color_stop_rgba (pat, 0, 0, 0, 0, 0.9);
+      cairo_rectangle (cr, x0, y0, conky_window.width/2*5, y1-y0);
+      cairo_set_source (cr, pat);
+      cairo_fill (cr);
+      cairo_pattern_destroy (pat);
+      cairo_stroke (cr)
+   end
 end
