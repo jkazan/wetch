@@ -1,0 +1,84 @@
+conky.config = {
+lua_load = '~/wetch/luascript.lua',
+lua_draw_hook_post  = 'main',
+
+falignment = br,
+background = false,
+update_interval = 5,
+default_color = c7c7c7,
+draw_outline = false,
+format_human_readable = true,
+
+own_window = true,
+own_window_colour = white,
+own_window_type = normal,
+
+own_window_argb_visual = false,
+own_window_argb_value = 0,
+own_window_transparent = true,
+
+double_buffer = true,
+
+--  Window Specifications
+gap_x=165,
+gap_y=10,
+alignment="top_middle",
+minimum_height=10,
+minimum_width=1910,
+own_window_class="conky",
+own_window_type="dock",
+own_window_hints="undecorated,below,sticky,skip_taskbar,skip_pager",
+xinerama_head = 2,
+}
+
+-- --  Generic Settings
+-- background=false,
+-- update_interval=1,
+-- double_buffer=true,
+-- no_buffers=true,
+-- imlib_cache_size=10,
+
+-- draw_shades=false,
+-- draw_outline=false,
+-- draw_borders=false,
+-- draw_graph_borders=false,
+
+-- --  Window Specifications
+-- gap_x=165,
+-- gap_y=1250,
+
+-- alignment="middle_middle",
+
+-- minimum_height=10,
+-- minimum_width=1910,
+
+-- own_window=true,
+-- own_window_class="conky",
+-- -- own_window_class="conky_semi",
+-- -- own_window_type="override",
+-- -- own_window_type="dock",
+-- own_window_type="panel",
+-- own_window_transparent=true,
+-- own_window_hints="undecorated,below,sticky,skip_taskbar,skip_pager",
+-- -- own_window_hints="undecorated,below,skip_taskbar,skip_pager",
+-- -- own_window_hints="above",
+
+-- own_window_argb_visual=false,
+-- own_window_argb_value=0,
+
+
+-- --  Text Settings
+-- -------------------------------------
+-- use_xft=true,
+-- xftalpha=1,
+-- font="Droid Sans:size=10",
+-- text_buffer_size=256,
+-- override_utf8_locale=true,
+
+-- }
+
+-- ---------------------------------------------------
+-- ---------------------------------------------------
+conky.text = [[
+]]
+

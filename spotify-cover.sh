@@ -13,6 +13,7 @@ if [ "$id_new" != "$id_current" ]; then
 	    imgurl=`dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata' | egrep -A 1 "artUrl" | egrep -v "artUrl"| cut -b 44- | cut -d '"' -f 1`
 
         wget -q -O ~/.cache/wetch/current.jpg $imgurl &> /dev/null
+        find ~/.cache/wetch/ -name "current.jpg" -exec mogrify -format png {} \;
 	    # rm wget-log #wget-logs are accumulated otherwise
 	    # cover=`ls ~/.cache/wetch | grep $id_new`
 	fi
@@ -24,3 +25,6 @@ if [ "$id_new" != "$id_current" ]; then
 	# fi
 	echo $id_new > ~/.cache/wetch/spotify_cover_id
 fi
+
+
+wget -q -O ~/test.jpg `dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata' | egrep -A 1 "artUrl" | egrep -v "artUrl"| cut -b 44- | cut -d '"' -f 1` &> /dev/null

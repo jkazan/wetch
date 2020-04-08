@@ -154,17 +154,16 @@ kill_running() {
         | sh
 }
 
+#######################################
+# Check if weather is recently updated
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   0 if updated
+#######################################
 is_updated() {
-    #######################################
-    # Check if weather is recently updated
-    # Globals:
-    #   None
-    # Arguments:
-    #   None
-    # Returns:
-    #   0 if updated
-    #######################################
-
     local last_update=$(head -n 1 ~/.cache/wetch/last_weather_update.txt)
     local now=$(date +"%s")
     local deltaH=$(($now - $now%3600 - $last_update + $last_update%3600))
@@ -179,7 +178,7 @@ is_updated() {
 }
 
 #######################################
-# Restart conky sessionn
+# Restart conky session
 # Globals:
 #   None
 # Arguments:
@@ -189,11 +188,11 @@ is_updated() {
 #######################################
 restart_conky() {
     killall conky
-    conky -c ~/wetch/.conkyrc
+    conky -c ~/wetch/${1}
 }
 
 #######################################
-# Main funciton
+# Main function
 # Globals:
 #   None
 # Arguments:
@@ -207,10 +206,16 @@ main() {
     set_api_key                 # Let function select which API key one to use
     kill_running                # Kill any running session
 
+    conky_file='.conkyrc'
+    if xrandr | grep "HDMI-1 connected" > /dev/null ; then
+        conky_file='.conkyrc2'
+    fi
+    echo $conky_file
+    
     if $verbose ; then
-        conky -c ~/wetch/.conkyrc  # Start verbose
+        conky -c ~/wetch/${conky_file}  # Start verbose
     else
-        conky -qc ~/wetch/.conkyrc # Start conky quiet
+        conky -qc ~/wetch/${conky_file} # Start conky quiet
     fi
 
     if $weather_flag ; then
@@ -218,7 +223,7 @@ main() {
             if !(is_updated) ; then # If weather is not up-to-date
                 set_api_key         # Select which API key one to use
                 update_weather      # Update weather data
-                restart_conky       # Restart conky with new weather icons etc.
+                restart_conky ${conky_file}  # Restart conky with new weather icons etc.
 
             fi
             sleep 5                 # Wait 5s before continuing
