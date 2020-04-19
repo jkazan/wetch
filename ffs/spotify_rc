@@ -1,0 +1,58 @@
+conky.config = {
+   lua_load = '~/wetch/conky-cards/spotify_cover.lua',
+   lua_draw_hook_post  = 'main',
+
+   --  Generic Settings
+   imlib_cache_flush_interval=1,
+   imlib_cache_size=0,
+
+   background=true,
+   update_interval=1,
+   double_buffer=true,
+   no_buffers=true,
+   imlib_cache_size=10,
+
+   draw_shades=false,
+   draw_outline=false,
+   draw_borders=false,
+   draw_graph_borders=false,
+
+   --  Window Specifications
+   gap_x=20,
+   gap_y=720,
+
+   alignment="top_left",
+   xinerama_head = 1,
+
+   minimum_height=350,
+   minimum_width=300,
+
+   own_window=true,
+   -- own_window_class="conky",
+   own_window_class="conky_semi",
+   -- own_window_type="override",
+   own_window_type="dock",
+   -- own_window_type="panel",
+   own_window_transparent=false,
+   own_window_hints="undecorated,below,sticky,skip_taskbar,skip_pager",
+   -- own_window_hints="undecorated,below,skip_taskbar,skip_pager",
+   -- own_window_hints="above",
+
+   own_window_argb_visual=true,
+   own_window_argb_value=0,
+
+
+   --  Text Settings
+   -------------------------------------
+   use_xft=true,
+   xftalpha=1,
+   font="Droid Sans:size=10",
+   text_buffer_size=256,
+   override_utf8_locale=true,
+
+}
+
+---------------------------------------------------
+---------------------------------------------------
+conky.text = [[
+]]
