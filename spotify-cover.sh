@@ -1,4 +1,5 @@
 #!/bin/bash
+mkdir -p ~/.cache/wetch/
 touch ~/.cache/wetch/spotify_cover_id
 id_current=$(cat ~/.cache/wetch/spotify_cover_id)
 
@@ -13,8 +14,8 @@ if [ "$id_new" != "$id_current" ]; then
 	    imgid=`dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata' | grep -Eo "[[:alnum:]]{30,}"`
         imgurl="https://d3rt1990lpmkn.cloudfront.net/640/${imgid}"
 
-        wget -q -O ~/.cache/wetch/current.jpg $imgurl &> /dev/null
-        find ~/.cache/wetch/ -name "current.jpg" -exec mogrify -format png {} \;
+        wget -q -O ~/.cache/wetch/current.jpeg $imgurl &> /dev/null
+        find ~/.cache/wetch/ -name "current.jpeg" -exec mogrify -format png {} \;
 
 	fi
 
