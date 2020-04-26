@@ -19,7 +19,7 @@ conky.config = {
    gap_y=300,
 
    alignment="top_left",
-   xinerama_head = 1,
+   xinerama_head = 0,
 
    minimum_height=600,
    minimum_width=250,

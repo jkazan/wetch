@@ -27,7 +27,7 @@ conky.config = {
 	default_shade_color = '#101010',
 
 	alignment = 'top_left',
-    xinerama_head = 1,
+    xinerama_head = 0,
 
 	gap_x = 20,
 	gap_y = 120,
@@ -49,5 +49,5 @@ conky.config = {
 conky.text = [[
 ${font Monospace:size=14:bold}
 Battery:   ${battery_percent}%
-${execi 2 bash /home/${USER}/wetch/conky-cards/test.sh}
+${execi 2 bash /home/${USER}/wetch/ffs/test.sh}
 ]];

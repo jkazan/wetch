@@ -25,7 +25,7 @@ function conky_main()
    badR=0.3
    badG=0
    badB=0
-   fs = 20
+   fs = 16
 
    draw_load()
    cairo_destroy(cr)
@@ -48,7 +48,7 @@ function draw_load()
    circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 240, "100", 100, c[1], c[2], c[3], 0.2)
    circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 240, cpu_usage, 100, c[1], c[2], c[3], 0.5)
    jprint(cr, "cpu", 0, y, fs, c[1], c[2], c[3], 1, font_n)
-   jprint(cr, cpu_usage, fs*2.5, y, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, cpu_usage, fs*3, y, fs, c[1], c[2], c[3], 1, font_n)
 
    local start=40
    local length=190/4 - 5
@@ -86,7 +86,7 @@ function draw_load()
    circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 240, "100", 100, c[1], c[2], c[3], 0.2)
    circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 240, ram_usage, 100, c[1], c[2], c[3], 0.5)
    jprint(cr, "ram", 0, y, fs, c[1], c[2], c[3], 1, font_n)
-   jprint(cr, ram_usage, fs*2.5, y, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, ram_usage, fs*3, y, fs, c[1], c[2], c[3], 1, font_n)
 
    -- root
    local r = 40
@@ -97,7 +97,7 @@ function draw_load()
    circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 240, "100", 100, c[1], c[2], c[3], 0.2)
    circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 240, root_usage, 100, c[1], c[2], c[3], 0.5)
    jprint(cr, "root", 0, y, fs, c[1], c[2], c[3], 1, font_n)
-   jprint(cr, root_usage, fs*2.5, y, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, root_usage, fs*3, y, fs, c[1], c[2], c[3], 1, font_n)
 
 
    -- swap
@@ -109,7 +109,7 @@ function draw_load()
    circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 240, "100", 100, c[1], c[2], c[3], 0.2)
    circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 240, swap_usage, 100, c[1], c[2], c[3], 0.5)
    jprint(cr, "swap", 0, y, fs, c[1], c[2], c[3], 1, font_n)
-   jprint(cr, swap_usage, fs*2.5, y, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, swap_usage, fs*3, y, fs, c[1], c[2], c[3], 1, font_n)
 end
 
 -------------------------------------

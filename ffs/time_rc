@@ -27,7 +27,7 @@ conky.config = {
    default_shade_color = '#101010',
 
    alignment = 'top_left',
-   xinerama_head = 1,
+   xinerama_head = 0,
 
    gap_x = 20,
    gap_y = 20,
