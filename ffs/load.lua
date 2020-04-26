@@ -34,7 +34,7 @@ function conky_main()
 end
 
 function draw_load()
-   local x=30
+   local x=45
 
    local thick = 15
 
@@ -45,10 +45,10 @@ function draw_load()
    local c=get_colors_gt(cpu_usage, 80)
    local r = 80
 
-   circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 240, "100", 100, c[1], c[2], c[3], 0.2)
-   circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 240, cpu_usage, 100, c[1], c[2], c[3], 0.5)
-   jprint(cr, "cpu", 0, y, fs, c[1], c[2], c[3], 1, font_n)
-   jprint(cr, cpu_usage, fs*3, y, fs, c[1], c[2], c[3], 1, font_n)
+   circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 270, "100", 100, c[1], c[2], c[3], 0.2)
+   circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 270, cpu_usage, 100, c[1], c[2], c[3], 0.5)
+   jprint(cr, "cpu", 5, y, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, cpu_usage, fs*3.5, y, fs, c[1], c[2], c[3], 1, font_n)
 
    local start=40
    local length=190/4 - 5
@@ -83,10 +83,10 @@ function draw_load()
    local c=get_colors_gt(ram_usage, 80)
 
 
-   circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 240, "100", 100, c[1], c[2], c[3], 0.2)
-   circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 240, ram_usage, 100, c[1], c[2], c[3], 0.5)
-   jprint(cr, "ram", 0, y, fs, c[1], c[2], c[3], 1, font_n)
-   jprint(cr, ram_usage, fs*3, y, fs, c[1], c[2], c[3], 1, font_n)
+   circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 270, "100", 100, c[1], c[2], c[3], 0.2)
+   circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 270, ram_usage, 100, c[1], c[2], c[3], 0.5)
+   jprint(cr, "ram", 5, y, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, ram_usage, fs*3.5, y, fs, c[1], c[2], c[3], 1, font_n)
 
    -- root
    local r = 40
@@ -94,10 +94,10 @@ function draw_load()
    local root_usage=tonumber(conky_parse("${fs_used_perc}"))
    local c=get_colors_gt(root_usage, 80)
 
-   circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 240, "100", 100, c[1], c[2], c[3], 0.2)
-   circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 240, root_usage, 100, c[1], c[2], c[3], 0.5)
-   jprint(cr, "root", 0, y, fs, c[1], c[2], c[3], 1, font_n)
-   jprint(cr, root_usage, fs*3, y, fs, c[1], c[2], c[3], 1, font_n)
+   circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 270, "100", 100, c[1], c[2], c[3], 0.2)
+   circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 270, root_usage, 100, c[1], c[2], c[3], 0.5)
+   jprint(cr, "root", 5, y, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, root_usage, fs*3.5, y, fs, c[1], c[2], c[3], 1, font_n)
 
 
    -- swap
@@ -106,10 +106,10 @@ function draw_load()
    local swap_usage = tonumber(conky_parse("${swapperc}"))
    local c = get_colors_gt(swap_usage, 80)
 
-   circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 240, "100", 100, c[1], c[2], c[3], 0.2)
-   circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 240, swap_usage, 100, c[1], c[2], c[3], 0.5)
-   jprint(cr, "swap", 0, y, fs, c[1], c[2], c[3], 1, font_n)
-   jprint(cr, swap_usage, fs*3, y, fs, c[1], c[2], c[3], 1, font_n)
+   circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 270, "100", 100, c[1], c[2], c[3], 0.2)
+   circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 270, swap_usage, 100, c[1], c[2], c[3], 0.5)
+   jprint(cr, "swap", 5, y, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, swap_usage, fs*3.5, y, fs, c[1], c[2], c[3], 1, font_n)
 end
 
 -------------------------------------
