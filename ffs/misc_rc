@@ -50,4 +50,5 @@ conky.text = [[
 ${font Monospace:size=14:bold}
 Battery:   ${battery_percent}%
 ${execi 2 bash /home/${USER}/wetch/ffs/test.sh}
+Ping pong: ${execi 10 bash /home/${USER}/wetch/pingpong.sh}
 ]];

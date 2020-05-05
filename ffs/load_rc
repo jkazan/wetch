@@ -16,7 +16,7 @@ conky.config = {
 
    --  Window Specifications
    gap_x=20,
-   gap_y=300,
+   gap_y=250,
 
    alignment="top_left",
    xinerama_head = 0,

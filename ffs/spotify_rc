@@ -19,10 +19,10 @@ conky.config = {
 
    --  Window Specifications
    gap_x=20,
-   gap_y=720,
+   gap_y=940,
 
    alignment="top_left",
-   xinerama_head = 1,
+   xinerama_head = 0,
 
    minimum_height=350,
    minimum_width=300,

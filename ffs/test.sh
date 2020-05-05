@@ -4,13 +4,12 @@ first=true
 
 for i in "${targets[@]}"
 do
-    # pwr=`hcitool tpl $i | grep -oE "[[:digit:]]+"`
     name=`hcitool name $i`
-    # if [[ "${name}" ]]; then
-    # name=`hcitool name $i`
     if [ -z "$name" ]; then
         if [ $i == "FE:C0:47:E8:C1:7D" ]; then
             name="MX Master 2"
+	elif [ $i == "2C:41:A1:52:B9:27" ]; then
+            name="Bose Free Soundsport"
         else
             name=$i
         fi
@@ -20,7 +19,6 @@ do
         first=false
         echo "Bluetooth: $name"
     else
-        echo 4
         echo "           $name"
     fi
 done

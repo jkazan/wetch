@@ -25,7 +25,7 @@ function conky_main()
    badR=0.3
    badG=0
    badB=0
-   fs = 20
+   fs = 15
 
 
    spotify()
@@ -37,19 +37,20 @@ end
 
 function spotify()
    local x = 0
-   local y = fs
+   local y = 2*fs
 
    -- Artist
    jprint(cr, conky_parse("${exec ~/wetch/spotify-artist.sh}"),
-          x, y, fs, 0.41, 0.64, 0, 1, CAIRO_FONT_WEIGHT_NORMAL)
+          x, y, fs, 0.31, 0.54, 0, 1, CAIRO_FONT_WEIGHT_BOLD)
 
    -- Title
    jprint(cr, conky_parse("${exec ~/wetch/spotify-title.sh}"),
-          x, y+fs, fs, 0.41, 0.64, 0, 1, CAIRO_FONT_WEIGHT_NORMAL)
+          x, y+fs, fs, 0.31, 0.54, 0, 1, CAIRO_FONT_WEIGHT_BOLD)
    -- 0.51, 0.74, 0 spotify rgb
    -- Artwork
    conky_parse("${exec ~/wetch/spotify-cover.sh}")
-   jimage(cr, "/home/jkazan/.cache/wetch/current.png", 1, 1, x, 50, 0.5)
+   jimage(cr, "/home/johannek/.cache/wetch/current.png", 1, 1, x, 50, 0.5)
+   -- 0.41, 0.64, 0, 1 spotify color
 end
 
 -------------------------------------
