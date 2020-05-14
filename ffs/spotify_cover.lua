@@ -27,10 +27,11 @@ function conky_main()
    badB=0
    fs = 15
 
-
+   image = cairo_image_surface_create_from_png("/home/johannek/.cache/wetch/current.png")
    spotify()
    cairo_destroy(cr)
    cairo_surface_destroy(cs)
+   cairo_surface_destroy(image)
    cr=nil
 end
 
@@ -49,7 +50,7 @@ function spotify()
    -- 0.51, 0.74, 0 spotify rgb
    -- Artwork
    conky_parse("${exec ~/wetch/spotify-cover.sh}")
-   jimage(cr, "/home/johannek/.cache/wetch/current.png", 1, 1, x, 50, 0.5)
+   jimage(cr, 0.905, 0.905, x, 50, 0.5)
    -- 0.41, 0.64, 0, 1 spotify color
 end
 
@@ -65,15 +66,13 @@ end
 
 -------------------------------------
 -- Draws image
--- @param path path to image
 -- @param w image width scale
 -- @param h image height scale
 -- @param x Upper left corner x coordinate
 -- @param y Upper left corner y coordinate
 -- @param a alpha
 -------------------------------------
-function jimage(CR, path, w, h, x, y, a)
-   image = cairo_image_surface_create_from_png(path)
+function jimage(CR, w, h, x, y, a)
    cairo_translate(CR, x, y)
    cairo_scale(CR, w, h)
    cairo_set_source_surface(CR, image, 0, 0)

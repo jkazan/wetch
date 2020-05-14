@@ -19,9 +19,9 @@ function conky_main()
 
    font_n=CAIRO_FONT_WEIGHT_NORMAL
    font_b=CAIRO_FONT_WEIGHT_BOLD
-   R=0
-   G=0
-   B=0
+   R=0.48
+   G=0.51
+   B=0.67
    badR=0.3
    badG=0
    badB=0

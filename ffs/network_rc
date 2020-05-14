@@ -46,12 +46,12 @@ conky.config = {
    override_utf8_locale=true,
 
 
-   color1 = '#000000',
+   color1 = '#7b81ab',
    color2 = '#101010',
 };
 
 conky.text = [[
-${color1}${font Monospace:size=10:bold}NETWORK ${color2} ${hr 2}
+${color1}${font Monospace:size=10:bold}NETWORK ${color2} ${hr 2} ${color1}
 ${font Monospace:size=10}
 wlan0 - ${wireless_essid wlan0}: ${addr wlan0} ${wireless_link_qual_perc wlan0}
 ${goto 60} ↑ ${upspeed wlan0} 

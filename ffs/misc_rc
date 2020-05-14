@@ -30,7 +30,7 @@ conky.config = {
     xinerama_head = 0,
 
 	gap_x = 20,
-	gap_y = 120,
+	gap_y = 150,
 
 	no_buffers = true,
 	cpu_avg_samples = 1,
@@ -38,7 +38,7 @@ conky.config = {
 	border_inner_margin = 15,
 
 --colors
-	color1 = '#96A0DF',
+	color1 = '#7b81ab',
 	color2 = '#aaa',
 	color3 = '#ddd',
 -- ${color1}${font Oswald:size=10:bold}TIME ${color2} ${hr 2} ${color3}${font}
@@ -46,9 +46,7 @@ conky.config = {
 -- ${color3}${font Open Sans:pixelsize=11}${alignr}${time %x}${font}
 };
 
-conky.text = [[
-${font Monospace:size=14:bold}
-Battery:   ${battery_percent}%
-${execi 2 bash /home/${USER}/wetch/ffs/test.sh}
+conky.text = [[${color1}${font Monospace:size=10:bold}Battery:   ${battery_percent}%
+${execi 2 bash /home/${USER}/wetch/ffs/bt.sh}
 Ping pong: ${execi 10 bash /home/${USER}/wetch/pingpong.sh}
 ]];

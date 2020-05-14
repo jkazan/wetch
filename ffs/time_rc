@@ -15,10 +15,11 @@ conky.config = {
    -- Uncomment and adjust the line below for window's opacity
    own_window_transparent = false,
    own_window_argb_visual=true,
-   own_window_argb_value = 0,
+   own_window_argb_value = 70,
    own_window_colour = '#000000',
    double_buffer = true,
    minimum_width = 225,
+   minimum_height = 1380,
    draw_shades = false,
    draw_outline = false,
    draw_borders = false,
@@ -29,8 +30,8 @@ conky.config = {
    alignment = 'top_left',
    xinerama_head = 0,
 
-   gap_x = 20,
-   gap_y = 20,
+   gap_x = 30,
+   gap_y = 30,
 
    no_buffers = true,
    cpu_avg_samples = 1,
@@ -38,7 +39,7 @@ conky.config = {
    border_inner_margin = 15,
 
    --colors
-   color1 = '#96A0DF',
+   color1 = '#7b81ab',
    color2 = '#aaa',
    color3 = '#ddd',
    -- ${color1}${font Oswald:size=10:bold}TIME ${color2} ${hr 2} ${color3}${font}
@@ -46,7 +47,6 @@ conky.config = {
    -- ${color3}${font Open Sans:pixelsize=11}${alignr}${time %x}${font}
 };
 
-conky.text = [[
-${font Monospace:size=50:bold}${time %H}:${time %M}${font}${time %S}
+conky.text = [[${color1}${font Monospace:size=50}${time %H}:${time %M}${font}${time %S}
 ${font Monospace:size=20:bold}${time %a %d %B %Y}
 ]];

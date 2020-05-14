@@ -5,5 +5,5 @@ SUB="is occupied"
 if [[ "$pp" == *"$SUB"* ]]; then
     echo "Currently occupied"
 else
-    echo $pp | cut -c 30-
+    echo ${pp//minutes/min} | cut -c 30-
 fi
