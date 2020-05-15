@@ -1,5 +1,5 @@
 conky.config = {
-   lua_load = '~/wetch/ffs/spotify_cover.lua',
+   lua_load = '~/wetch/spotify_cover.lua',
    lua_draw_hook_post  = 'main',
 
    --  Generic Settings
