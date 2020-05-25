@@ -1,52 +1,49 @@
 conky.config = {
-	background = false,
-	font = 'LubalinGraphECG-Book:size=10',
---xftfont sans:size=10
-	use_xft = true,
-	xftalpha = 0.9,
-	update_interval = 1,
-	imlib_cache_size = 0,
-	total_run_times = 0,
-	own_window = true,
-	own_window_type = 'dock',
-	own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
-	own_window_argb_visual = true,
+   --  Generic Settings
+   background=true,
+   update_interval=1,
+   double_buffer=true,
+   no_buffers=true,
 
-    -- Uncomment and adjust the line below for window's opacity
-    own_window_transparent = false,
-    own_window_argb_visual=true,
-	own_window_argb_value = 0,
-	own_window_colour = '#000000',
-	double_buffer = true,
-	minimum_width = 225,
-	draw_shades = false,
-	draw_outline = false,
-	draw_borders = false,
-	draw_graph_borders = true,
-	default_color = '#101010',
-	default_shade_color = '#101010',
+   draw_shades=false,
+   draw_outline=false,
+   draw_borders=false,
+   draw_graph_borders=false,
 
-	alignment = 'top_left',
-    xinerama_head = 0,
+   --  Window Specifications
+   gap_x=20,
+   gap_y=140,
 
-	gap_x = 20,
-	gap_y = 150,
+   alignment="top_left",
+   xinerama_head = 0,
 
-	no_buffers = true,
-	cpu_avg_samples = 1,
-	uppercase = false,
-	border_inner_margin = 15,
+   minimum_width=250,
 
---colors
-	color1 = '#7b81ab',
-	color2 = '#aaa',
-	color3 = '#ddd',
--- ${color1}${font Oswald:size=10:bold}TIME ${color2} ${hr 2} ${color3}${font}
--- ${color3}${font Roboto:pixelsize=70}${alignr}${time %I:%M}${font}${time %S}
--- ${color3}${font Open Sans:pixelsize=11}${alignr}${time %x}${font}
+   own_window=true,
+   own_window_class="conky_semi",
+   own_window_type="dock",
+   own_window_transparent=false,
+   own_window_hints="undecorated,below,sticky,skip_taskbar,skip_pager",
+
+   own_window_argb_visual=true,
+   own_window_argb_value=0,
+
+
+   --  Text Settings
+   -------------------------------------
+   use_xft=true,
+   xftalpha=1,
+   font="Droid Sans:size=10",
+   text_buffer_size=256,
+   override_utf8_locale=true,
+
+
+   color1 = '#7b81ab',
+   color2 = '#101010',
+   
 };
 
-conky.text = [[${color1}${font Monospace:size=10:bold}Battery:   ${battery_percent}%
-${execi 2 bash /home/${USER}/wetch/ffs/bt.sh}
-Ping pong: ${execi 10 bash /home/${USER}/wetch/pingpong.sh}
+conky.text = [[${color1}${font Monospace:size=10:bold}MISC. ${color2}${hr 2} ${color1}${font Monospace:size=10}
+Battery:${alignr}${battery_percent}%
+${execi 2 bash /home/${USER}/wetch/bt.sh}
 ]];

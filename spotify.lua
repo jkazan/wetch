@@ -27,7 +27,9 @@ function conky_main()
    badB=0
    fs = 15
 
-   image = cairo_image_surface_create_from_png("/home/johannek/.cache/wetch/current.png")
+   local user = conky_parse("${user_names}")
+   image = cairo_image_surface_create_from_png(
+      "/home/" .. user .. "/.cache/wetch/current.png")
    spotify()
    cairo_destroy(cr)
    cairo_surface_destroy(cs)
@@ -42,12 +44,13 @@ function spotify()
 
    -- Artist
    jprint(cr, conky_parse("${exec ~/wetch/spotify-artist.sh}"),
-          x, y, fs, 0.31, 0.54, 0, 1, CAIRO_FONT_WEIGHT_BOLD)
+          x, y, fs, 0.31, 0.54, 0, 1, font_b)
 
    -- Title
    jprint(cr, conky_parse("${exec ~/wetch/spotify-title.sh}"),
-          x, y+fs, fs, 0.31, 0.54, 0, 1, CAIRO_FONT_WEIGHT_BOLD)
+          x, y+fs, fs, 0.31, 0.54, 0, 1, font_b)
    -- 0.51, 0.74, 0 spotify rgb
+   
    -- Artwork
    conky_parse("${exec ~/wetch/spotify-cover.sh}")
    jimage(cr, 0.905, 0.905, x, 50, 0.5)

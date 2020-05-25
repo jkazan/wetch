@@ -1,5 +1,5 @@
 conky.config = {
-   lua_load = '~/wetch/spotify_cover.lua',
+   lua_load = '~/wetch/spotify.lua',
    lua_draw_hook_post  = 'main',
 
    --  Generic Settings
@@ -19,7 +19,7 @@ conky.config = {
 
    --  Window Specifications
    gap_x=20,
-   gap_y=940,
+   gap_y=750,
 
    alignment="top_left",
    xinerama_head = 0,
@@ -50,6 +50,8 @@ conky.config = {
    text_buffer_size=256,
    override_utf8_locale=true,
 
+   color1 = '#7b81ab',
+   color2 = '#101010',
 }
 
 ---------------------------------------------------
