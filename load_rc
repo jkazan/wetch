@@ -56,13 +56,15 @@ conky.config = {
 ---------------------------------------------------
 ---------------------------------------------------
 conky.text = [[${color3}
-${font Monospace:size=10:bold}top cpu (%) ${color2}${hr 2}${color3}${font Monospace:size=10}
-${top name 1}${goto 160}${top cpu 1}
-${top name 2}${goto 160}${top cpu 2}
-${top name 3}${goto 160}${top cpu 3}
+${font Monospace:size=10:bold}TOP CPU ${color2}${hr 2}${color3}${font Monospace:size=10}
+${top name 1}${alignr}${top cpu 1}%
+${top name 2}${alignr}${top cpu 2}%
+${top name 3}${alignr}${top cpu 3}%
 
-${font Monospace:size=10:bold}top ram (%) ${color2}${hr 2}${color3}${font Monospace:size=10}
-${top_mem name 1}${goto 160}${top mem 1}
-${top_mem name 2}${goto 160}${top mem 2}
-${top_mem name 3}${goto 160}${top mem 3}
+${font Monospace:size=10:bold}TOP RAM ${color2}${hr 2}${color3}${font Monospace:size=10}
+${}${top_mem name 1}${alignr}${top mem 1}%
+${top_mem name 2}${alignr}${top mem 2}%
+${top_mem name 3}${alignr}${top mem 3}%
+
+${font Monospace:size=10:bold}LOAD ${color2}${hr 2}
 ]]

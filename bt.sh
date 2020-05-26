@@ -6,7 +6,7 @@ for i in "${targets[@]}"
 do
     name=`hcitool name $i`
     if [ -z "$name" ]; then
-        if [ $i == "FE:C0:47:E8:C1:7D" ]; then
+        if [ $i == "FE:C0:47:E8:C1:7E" ]; then
             name="MX Master 2"
 	elif [ $i == "2C:41:A1:52:B9:27" ]; then
             name="Bose Free Soundsport"

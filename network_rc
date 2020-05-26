@@ -1,5 +1,6 @@
 conky.config = {
-
+   lua_load = '~/wetch/network.lua',
+   lua_draw_hook_post  = 'main',
    --  Generic Settings
    background=true,
    update_interval=1,
@@ -52,16 +53,4 @@ conky.config = {
 
 conky.text = [[
 ${color1}${font Monospace:size=10:bold}NETWORK ${color2} ${hr 2} ${color1}
-${font Monospace:size=10}
-wlan0 - ${wireless_essid wlan0}: ${addr wlan0} ${wireless_link_qual_perc wlan0}
-${goto 60} ↑ ${upspeed wlan0} 
-${goto 60} ↓ ${downspeed wlan0}${goto 120}
-
-eth0: ${addr eth0}
-${goto 60} ↑ ${upspeed eth0} 
-${goto 60} ↓ ${downspeed eth0}${goto 120}
-
-eth1: ${addr eth1}
-${goto 60} ↑ ${upspeed eth1} 
-${goto 60} ↓ ${downspeed eth1}${goto 120}
 ]];

@@ -1,6 +1,5 @@
 require 'cairo'
 require 'imlib2'
--- TODO: Make independant on location of wetch
 -------------------------------------
 -- Main function
 -------------------------------------
@@ -13,7 +12,6 @@ function conky_main()
                                         conky_window.visual,
                                         conky_window.width,
                                         conky_window.height)
-
 
    cr = cairo_create(cs)
 
@@ -34,12 +32,12 @@ function conky_main()
 end
 
 function draw_load()
-   local x=45
+   local x = 70
 
    local thick = 15
 
    -- cpu
-   local y0=210
+   local y0=240
    local y = y0
    local cpu_usage=tonumber(conky_parse("${cpu}"))
    local c=get_colors_gt(cpu_usage, 80)
@@ -47,8 +45,9 @@ function draw_load()
 
    circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 230, "100", 100, c[1], c[2], c[3], 0.2)
    circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 230, cpu_usage, 100, c[1], c[2], c[3], 0.5)
-   jprint(cr, "cpu", 5, y, fs, c[1], c[2], c[3], 1, font_n)
-   jprint(cr, cpu_usage, fs*3.5, y, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, "cpu", x-50, y, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, "%", x+27, y, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, cpu_usage, x, y, fs, c[1], c[2], c[3], 1, font_n)
 
    local start=40
    local length=190/4 - 5
@@ -85,8 +84,9 @@ function draw_load()
 
    circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 230, "100", 100, c[1], c[2], c[3], 0.2)
    circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 230, ram_usage, 100, c[1], c[2], c[3], 0.5)
-   jprint(cr, "ram", 5, y, fs, c[1], c[2], c[3], 1, font_n)
-   jprint(cr, ram_usage, fs*3.5, y, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, "ram", x-50, y, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, "%", x+27, y, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, ram_usage, x, y, fs, c[1], c[2], c[3], 1, font_n)
 
    -- root
    local r = 40
@@ -96,8 +96,9 @@ function draw_load()
 
    circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 230, "100", 100, c[1], c[2], c[3], 0.2)
    circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 230, root_usage, 100, c[1], c[2], c[3], 0.5)
-   jprint(cr, "root", 5, y, fs, c[1], c[2], c[3], 1, font_n)
-   jprint(cr, root_usage, fs*3.5, y, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, "root", x-50, y, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, "%", x+27, y, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, root_usage, x, y, fs, c[1], c[2], c[3], 1, font_n)
 
    -- home
    local r = 20
@@ -107,8 +108,9 @@ function draw_load()
 
    circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 230, "100", 100, c[1], c[2], c[3], 0.2)
    circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 230, home_usage, 100, c[1], c[2], c[3], 0.5)
-   jprint(cr, "home", 5, y, fs, c[1], c[2], c[3], 1, font_n)
-   jprint(cr, home_usage, fs*3.5, y, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, "home", x-50, y, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, "%", x+27, y, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, home_usage, x, y, fs, c[1], c[2], c[3], 1, font_n)
    
    -- swap
    local r = 6
@@ -118,8 +120,9 @@ function draw_load()
 
    circleFill(cr, x+fs*3, y+r-fs/4, r, thick/3, 0, 230, "100", 100, c[1], c[2], c[3], 0.2)
    circleFill(cr, x+fs*3, y+r-fs/4, r, thick/3, 0, 230, swap_usage, 100, c[1], c[2], c[3], 0.5)
-   jprint(cr, "swap", 5, y+4, fs, c[1], c[2], c[3], 1, font_n)
-   jprint(cr, swap_usage, fs*3.5, y+4, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, "swap", x-50, y+4, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, "%", x+27, y+4, fs, c[1], c[2], c[3], 1, font_n)
+   jprint(cr, swap_usage, x, y+4, fs, c[1], c[2], c[3], 1, font_n)
 end
 
 -------------------------------------

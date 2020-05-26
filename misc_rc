@@ -37,16 +37,12 @@ conky.config = {
 	uppercase = false,
 	border_inner_margin = 15,
 
---colors
-	color1 = '#7b81ab',
-	color2 = '#aaa',
-	color3 = '#ddd',
--- ${color1}${font Oswald:size=10:bold}TIME ${color2} ${hr 2} ${color3}${font}
--- ${color3}${font Roboto:pixelsize=70}${alignr}${time %I:%M}${font}${time %S}
--- ${color3}${font Open Sans:pixelsize=11}${alignr}${time %x}${font}
+        color1 = '#7b81ab',
+        color2 = '#101010',
 };
 
-conky.text = [[${color1}${font Monospace:size=10:bold}Battery:   ${battery_percent}%
-${execi 2 bash /home/${USER}/wetch/ffs/bt.sh}
+conky.text = [[${color1}${font Monospace:size=10:bold}MISC. ${color2}${hr 2} ${color1}${font Monospace:size=10}
+${color1}${font Monospace:size=10:bold}Battery:   ${battery_percent}%
+${execi 2 bash /home/${USER}/wetch/bt.sh}
 Ping pong: ${execi 10 bash /home/${USER}/wetch/pingpong.sh}
 ]];
