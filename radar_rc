@@ -1,8 +1,11 @@
 conky.config = {
-   lua_load = '~/wetch/load.lua',
+   lua_load = '~/wetch/radar.lua',
    lua_draw_hook_post  = 'main',
 
    --  Generic Settings
+   imlib_cache_flush_interval=1,
+   imlib_cache_size=0,
+
    background=true,
    update_interval=1,
    double_buffer=true,
@@ -16,13 +19,13 @@ conky.config = {
 
    --  Window Specifications
    gap_x=20,
-   gap_y=250,
+   gap_y=500,
 
    alignment="top_left",
    xinerama_head = 0,
 
    minimum_height=600,
-   minimum_width=250,
+   minimum_width=300,
 
    own_window=true,
    -- own_window_class="conky",
@@ -47,24 +50,9 @@ conky.config = {
    text_buffer_size=256,
    override_utf8_locale=true,
 
-
-   color1 = '#000000',
-   color2 = '#101010',
-   color3 = '#7b81ab',
 }
 
 ---------------------------------------------------
 ---------------------------------------------------
-conky.text = [[${color3}
-${font Monospace:size=10:bold}TOP CPU ${color2}${hr 2}${color3}${font Monospace:size=10}
-${top name 1}${alignr}${top cpu 1}%
-${top name 2}${alignr}${top cpu 2}%
-${top name 3}${alignr}${top cpu 3}%
-
-${font Monospace:size=10:bold}TOP RAM ${color2}${hr 2}${color3}${font Monospace:size=10}
-${top_mem name 1}${alignr}${top mem 1}%
-${top_mem name 2}${alignr}${top mem 2}%
-${top_mem name 3}${alignr}${top mem 3}%
-
-${font Monospace:size=10:bold}LOAD ${color2}${hr 2}
+conky.text = [[
 ]]
