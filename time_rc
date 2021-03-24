@@ -1,3 +1,4 @@
+
 conky.config = {
    background = false,
    font = 'LubalinGraphECG-Book:size=15',
@@ -18,7 +19,7 @@ conky.config = {
    own_window_argb_value = 70,
    own_window_colour = '#000000',
    double_buffer = true,
-   minimum_width = 225,
+   minimum_width = 245,
    minimum_height = 1380,
    draw_shades = false,
    draw_outline = false,
@@ -47,6 +48,6 @@ conky.config = {
    -- ${color3}${font Open Sans:pixelsize=11}${alignr}${time %x}${font}
 };
 
-conky.text = [[${color1}${font Monospace:size=50}${time %H}:${time %M}${font}${time %S}
-${font Monospace:size=20:bold}${time %a %d %B %Y}
+conky.text = [[${color1}${font Monospace:size=40}${time %H}:${time %M}${font}${time %S}
+${font Monospace:size=16:bold}${time %a %d %b %Y}
 ]];
