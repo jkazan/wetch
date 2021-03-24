@@ -18,7 +18,7 @@ conky.config = {
 	own_window_argb_value = 0,
 	own_window_colour = '#000000',
 	double_buffer = true,
-	minimum_width = 225,
+	minimum_width = 250,
 	draw_shades = false,
 	draw_outline = false,
 	draw_borders = false,
@@ -30,7 +30,7 @@ conky.config = {
     xinerama_head = 0,
 
 	gap_x = 20,
-	gap_y = 150,
+	gap_y = 120,
 
 	no_buffers = true,
 	cpu_avg_samples = 1,
@@ -44,5 +44,5 @@ conky.config = {
 conky.text = [[${color1}${font Monospace:size=10:bold}MISC. ${color2}${hr 2} ${color1}${font Monospace:size=10}
 ${color1}${font Monospace:size=10:bold}Battery:   ${battery_percent}%
 ${execi 2 bash /home/${USER}/wetch/bt.sh}
-Ping pong: ${execi 10 bash /home/${USER}/wetch/pingpong.sh}
+Ping pong: ${exec bash /home/${USER}/wetch/pingpong.sh}
 ]];

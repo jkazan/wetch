@@ -1,5 +1,8 @@
 require 'cairo'
 
+-------------------------------------
+-- Main function
+-------------------------------------
 function conky_main()
    if conky_window == nil then
       return
@@ -28,25 +31,30 @@ function network()
    local y = 3*fs
 
    local networks=split(conky_parse("${execi 1 ifconfig | grep -Eo '^(e|w)[[:alnum:]]+'}"))
-
    local net = ""
    local up_str = ""
    local down_str = ""
-   for i = 1,len(networks) do
-      if networks[i]:sub(1, 1) == "w" then
-	 net_str = "${wireless_essid " .. networks[i] .. "}: " ..
-	    "${addr " .. networks[i] .. "} " ..
-	    "${wireless_link_qual_perc " .. networks[i] .. "}%"
-      else
-	 net_str = networks[i] .. ": ${addr " .. networks[i] .. "}"
-      end
-      net = conky_parse(net_str)
-      up_str = conky_parse("↑ ${upspeed " .. networks[i] .. "}")
-      down_str = conky_parse("↓ ${downspeed " .. networks[i] .. "}")
+   local spacing = 1
+   for i = 1,table.getn(networks) do
+      local address = conky_parse("${addr " .. networks[i] .. "} ")
+      if address ~= "No Address " then
+          if networks[i]:sub(1, 1) == "w" then
+             net_str = "${wireless_essid " .. networks[i] .. "}: " ..
+                "${addr " .. networks[i] .. "} " ..
+                "${wireless_link_qual_perc " .. networks[i] .. "}%"
+          else
+             net_str = networks[i] .. ": ${addr " .. networks[i] .. "}"
+          end
+          net = conky_parse(net_str)
+          up_str = conky_parse("↑ ${upspeed " .. networks[i] .. "}")
+          down_str = conky_parse("↓ ${downspeed " .. networks[i] .. "}")
 
-      jprint(cr, net, x, y+fs*4*(i-1), fs, 0.48, 0.51, 0.67, 1)
-      jprint(cr, up_str, x+60, y+fs*(4*(i-1)+1), fs, 0.48, 0.51, 0.67, 1)
-      jprint(cr, down_str, x+60, y+fs*(4*(i-1)+2), fs, 0.48, 0.51, 0.67, 1)
+          jprint(cr, net, x, y+fs*4*(spacing-1), fs, 0.48, 0.51, 0.67, 1)
+          jprint(cr, up_str, x+60, y+fs*(4*(spacing-1)+1), fs, 0.48, 0.51, 0.67, 1)
+          jprint(cr, down_str, x+60, y+fs*(4*(spacing-1)+2), fs, 0.48, 0.51, 0.67, 1)
+
+          spacing = spacing+1
+      end
    end
 end
 
@@ -60,7 +68,7 @@ function jprint(CR, str, x, y, fontSize, r, g, b, a, face)
    cairo_stroke(CR)
 end
 
-function split (inputstr, sep)
+function split(inputstr)
    if sep == nil then
       sep = "%s"
    end
@@ -68,11 +76,6 @@ function split (inputstr, sep)
    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
       table.insert(t, str)
    end
-   return t
-end
 
-function len(T)
-   local count = 0
-   for _ in pairs(T) do count = count + 1 end
-   return count
+   return t
 end

@@ -18,13 +18,13 @@ conky.config = {
    draw_graph_borders=false,
 
    --  Window Specifications
-   gap_x=20,
-   gap_y=940,
+   gap_x=19,
+   gap_y=743,
 
    alignment="top_left",
    xinerama_head = 0,
 
-   minimum_height=350,
+   minimum_height=700,
    minimum_width=300,
 
    own_window=true,

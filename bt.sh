@@ -1,20 +1,11 @@
 #!/bin/bash
-targets=($(hcitool con | grep -oE "([[:alnum:]]+:){5}[[:alnum:]]+"))
+connections=($(hcitool con | grep -oE "(\w+:){5}\w+"))
 first=true
 
-for i in "${targets[@]}"
+device=($(hcitool dev | grep -o -E '(\w+:){5}\w+'))
+for i in "${connections[@]}"
 do
-    name=`hcitool name $i`
-    if [ -z "$name" ]; then
-        if [ $i == "FE:C0:47:E8:C1:7E" ]; then
-            name="MX Master 2"
-	elif [ $i == "2C:41:A1:52:B9:27" ]; then
-            name="Bose Free Soundsport"
-        else
-            name=$i
-        fi
-    fi
-
+    name=$(sudo cat /var/lib/bluetooth/${device}/${i}/info | grep Name= | awk -F'=' '{print $2}')
     if [ $first = true ]; then
         first=false
         echo "Bluetooth: $name"
