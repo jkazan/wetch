@@ -5,7 +5,6 @@
 
 ### Dependencies
 - conky-all
-- libnotify4
 
 ### Installation
 ```sh
