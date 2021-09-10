@@ -1,6 +1,7 @@
 conky.config = {
-   lua_load = '~/wetch/network.lua',
+   lua_load = '~/wetch/src/load.lua',
    lua_draw_hook_post  = 'main',
+
    --  Generic Settings
    background=true,
    update_interval=1,
@@ -15,7 +16,7 @@ conky.config = {
 
    --  Window Specifications
    gap_x=20,
-   gap_y=610,
+   gap_y=170,
 
    alignment="top_left",
    xinerama_head = 0,
@@ -47,10 +48,23 @@ conky.config = {
    override_utf8_locale=true,
 
 
-   color1 = '#7b81ab',
+   color1 = '#000000',
    color2 = '#101010',
-};
+   color3 = '#7b81ab',
+}
 
-conky.text = [[
-${color1}${font PoiretOne-Regular:size=12:bold}NETWORK ${color2} ${hr 2} ${color1}
-]];
+---------------------------------------------------
+---------------------------------------------------
+conky.text = [[${color3}
+${font PoiretOne-Regular:size=12:bold}TOP CPU ${color2}${hr 2}${color3}${font Monospace:size=10}
+${top name 1}${alignr}${top cpu 1}%
+${top name 2}${alignr}${top cpu 2}%
+${top name 3}${alignr}${top cpu 3}%
+
+${font PoiretOne-Regular:size=12:bold}TOP RAM ${color2}${hr 2}${color3}${font Monospace:size=10}
+${top_mem name 1}${alignr}${top mem 1}%
+${top_mem name 2}${alignr}${top mem 2}%
+${top_mem name 3}${alignr}${top mem 3}%
+
+${font PoiretOne-Regular:size=12:bold}LOAD ${color2}${hr 2}
+]]

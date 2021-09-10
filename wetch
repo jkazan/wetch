@@ -4,8 +4,8 @@ echo "$(xrandr | grep -Eo 'primary \w+' | grep -Eo '[[:digit:]]+$')" > ~/wetch/.
 repo_path="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 echo "$USER" > $repo_path/.user
 
-conky -dq -c ~/wetch/time_rc
-conky -dq -c ~/wetch/misc_rc
-conky -dq -c ~/wetch/spotify_rc
-conky -dq -c ~/wetch/load_rc
-conky -dq -c ~/wetch/network_rc
+conky -dq -c ~/wetch/src/time_rc
+conky -dq -c ~/wetch/src/misc_rc
+conky -dq -c ~/wetch/src/spotify_rc
+conky -dq -c ~/wetch/src/load_rc
+conky -dq -c ~/wetch/src/network_rc

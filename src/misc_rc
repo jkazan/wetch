@@ -43,5 +43,5 @@ conky.config = {
 
 conky.text = [[${color1}${font PoiretOne-Regular:size=12:bold}MISC. ${color2}${hr 2} ${color1}${font Monospace:size=10}
 ${color1}${font Monospace:size=10}Battery:   ${battery_percent}%
-${execi 2 bash /home/${USER}/wetch/bt.sh}
+${execi 2 bash /home/${USER}/wetch/src/bt.sh}
 ]];
