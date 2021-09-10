@@ -18,14 +18,14 @@ conky.config = {
    draw_graph_borders=false,
 
    --  Window Specifications
-   gap_x=19,
-   gap_y=743,
+   gap_x=20,
+   gap_y=740,
 
    alignment="top_left",
    xinerama_head = 0,
 
    minimum_height=700,
-   minimum_width=300,
+   minimum_width=250,
 
    own_window=true,
    -- own_window_class="conky",
@@ -50,9 +50,12 @@ conky.config = {
    text_buffer_size=256,
    override_utf8_locale=true,
 
+   color1 = '#7b81ab',
+   color2 = '#101010',
 }
 
 ---------------------------------------------------
 ---------------------------------------------------
 conky.text = [[
+${color1}${font PoiretOne-Regular:size=12:bold}SPOTIFY ${color2} ${hr 2} ${color1}
 ]]

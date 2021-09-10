@@ -15,7 +15,7 @@ conky.config = {
 
    --  Window Specifications
    gap_x=20,
-   gap_y=630,
+   gap_y=610,
 
    alignment="top_left",
    xinerama_head = 0,
@@ -52,5 +52,5 @@ conky.config = {
 };
 
 conky.text = [[
-${color1}${font Monospace:size=10:bold}NETWORK ${color2} ${hr 2} ${color1}
+${color1}${font PoiretOne-Regular:size=12:bold}NETWORK ${color2} ${hr 2} ${color1}
 ]];

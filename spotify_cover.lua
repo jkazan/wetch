@@ -25,10 +25,11 @@ function conky_main()
    badR=0.3
    badG=0
    badB=0
-   fs = 15
+   fs = 14
 
-   image = cairo_image_surface_create_from_png("/home/johannek/.cache/wetch/current.png")
-   height = conky_parse("${execi 1 xrandr | grep -Eo 'primary [[:alnum:]]+' | grep -Eo '[[:digit:]]+$' }")
+   user = conky_parse("${execi 999999 cat ~/wetch/.user}")
+   image = cairo_image_surface_create_from_png("/home/"..user.."/.cache/wetch/current.png")
+   height = conky_parse("${execi 999999 cat ~/wetch/.height}")
    x = 0
    y = 2*fs + tonumber(height)-1080
 
@@ -41,23 +42,22 @@ end
 
 
 function spotify()
-
    -- Artist
-   jprint(cr, conky_parse("${exec ~/wetch/spotify-artist.sh}"),
-          x+5, y, fs, 0.31, 0.54, 0, 1, CAIRO_FONT_WEIGHT_BOLD)
+   jprint(cr, conky_parse("${execi 1 ~/wetch/spotify-artist.sh}"),
+          x+5, y+15, fs, 0.31, 0.54, 0, 1, font_n)
 
    -- Title
-   jprint(cr, conky_parse("${exec ~/wetch/spotify-title.sh}"),
-          x+5, y+fs, fs, 0.31, 0.54, 0, 1, CAIRO_FONT_WEIGHT_BOLD)
+   jprint(cr, conky_parse("${execi 1 ~/wetch/spotify-title.sh}"),
+          x+5, y+fs+20, fs, 0.31, 0.54, 0, 1, font_n)
 
    -- Artwork
-   conky_parse("${exec ~/wetch/spotify-cover.sh}")
-   jimage(cr, 0.93, 0.93, x, y + 20, 0.5)
+   conky_parse("${execi 1 ~/wetch/spotify-cover.sh}")
+   jimage(cr, 0.4, 0.4, x+5, y + 40, 0.5)
 end
 
 -------------------------------------
 function jprint(CR, str, x, y, fontSize, r, g, b, a, face)
-   cairo_select_font_face(CR, "Monospace", CAIRO_FONT_SLANT_NORMAL, face)
+   cairo_select_font_face(CR, "monospace", CAIRO_FONT_SLANT_NORMAL, face)
    cairo_set_font_size(CR, fontSize)
    cairo_set_source_rgba(CR, r, g, b, a)
    cairo_move_to(CR, x, y)

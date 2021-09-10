@@ -16,7 +16,7 @@ conky.config = {
 
    --  Window Specifications
    gap_x=20,
-   gap_y=190,
+   gap_y=170,
 
    alignment="top_left",
    xinerama_head = 0,
@@ -56,15 +56,15 @@ conky.config = {
 ---------------------------------------------------
 ---------------------------------------------------
 conky.text = [[${color3}
-${font Monospace:size=10:bold}TOP CPU ${color2}${hr 2}${color3}${font Monospace:size=10}
+${font PoiretOne-Regular:size=12:bold}TOP CPU ${color2}${hr 2}${color3}${font Monospace:size=10}
 ${top name 1}${alignr}${top cpu 1}%
 ${top name 2}${alignr}${top cpu 2}%
 ${top name 3}${alignr}${top cpu 3}%
 
-${font Monospace:size=10:bold}TOP RAM ${color2}${hr 2}${color3}${font Monospace:size=10}
+${font PoiretOne-Regular:size=12:bold}TOP RAM ${color2}${hr 2}${color3}${font Monospace:size=10}
 ${top_mem name 1}${alignr}${top mem 1}%
 ${top_mem name 2}${alignr}${top mem 2}%
 ${top_mem name 3}${alignr}${top mem 3}%
 
-${font Monospace:size=10:bold}LOAD ${color2}${hr 2}
+${font PoiretOne-Regular:size=12:bold}LOAD ${color2}${hr 2}
 ]]
