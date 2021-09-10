@@ -1,7 +1,8 @@
 # wetch - conky and lua for system monitoring
 [![N|Solid](https://i.imgur.com/SVr2HuS.png)](https://i.imgur.com/SVr2HuS.png)
 
-![N|Solid](https://img.shields.io/badge/Debian-Tested-green.svg?longCache=true&style=popout-square) ![N|Solid](https://img.shields.io/badge/Ubuntu-Tested-green.svg?longCache=true&style=popout-square) ![N|Solid](https://img.shields.io/badge/License-MIT-blue.svg?longCache=true&style=popout-square)
+![N|Solid](https://img.shields.io/badge/Debian-Tested-green.svg?longCache=true&style=popout-square) ![N|Solid](https://img.shields.io/badge/Ubuntu-Tested-green.svg?longCache=true&style=popout-square) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 
 ### Dependencies
 - conky-all
