@@ -58,7 +58,19 @@ function network()
    end
 end
 
--------------------------------------
+----------------------------------------------------------------------------------------
+-- Prints string
+-- @param CR Image width scale
+-- @param str String to print
+-- @param x Upper left corner x coordinate
+-- @param y Upper left corner y coordinate
+-- @param fontSize Font size
+-- @param r Red
+-- @param g Green
+-- @param b Blue
+-- @param a Alpha
+-- @param face Cairo font face
+----------------------------------------------------------------------------------------
 function jprint(CR, str, x, y, fontSize, r, g, b, a, face)
    cairo_select_font_face(CR, "Monospace", CAIRO_FONT_SLANT_NORMAL, face)
    cairo_set_font_size(CR, fontSize)
@@ -68,6 +80,10 @@ function jprint(CR, str, x, y, fontSize, r, g, b, a, face)
    cairo_stroke(CR)
 end
 
+----------------------------------------------------------------------------------------
+-- Splits string
+-- @param inputstr String to split
+----------------------------------------------------------------------------------------
 function split(inputstr)
    if sep == nil then
       sep = "%s"

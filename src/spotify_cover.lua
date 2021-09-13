@@ -1,6 +1,6 @@
 require 'cairo'
 require 'imlib2'
--- TODO: Make independant on location of wetch
+
 -------------------------------------
 -- Main function
 -------------------------------------
@@ -40,7 +40,6 @@ function conky_main()
    cr=nil
 end
 
-
 function spotify()
    -- Artist
    jprint(cr, conky_parse("${execi 1 ~/wetch/src/spotify-artist.sh}"),
@@ -52,10 +51,22 @@ function spotify()
 
    -- Artwork
    conky_parse("${execi 1 ~/wetch/src/spotify-cover.sh}")
-   jimage(cr, 0.4, 0.4, x+5, y + 40, 0.5)
+   jimage(cr, 0.4, 0.4, x+5, y + 40, 0.8)
 end
 
--------------------------------------
+----------------------------------------------------------------------------------------
+-- Prints string
+-- @param CR Image width scale
+-- @param str String to print
+-- @param x Upper left corner x coordinate
+-- @param y Upper left corner y coordinate
+-- @param fontSize Font size
+-- @param r Red
+-- @param g Green
+-- @param b Blue
+-- @param a Alpha
+-- @param face Cairo font face
+----------------------------------------------------------------------------------------
 function jprint(CR, str, x, y, fontSize, r, g, b, a, face)
    cairo_select_font_face(CR, "monospace", CAIRO_FONT_SLANT_NORMAL, face)
    cairo_set_font_size(CR, fontSize)
@@ -65,14 +76,15 @@ function jprint(CR, str, x, y, fontSize, r, g, b, a, face)
    cairo_stroke(CR)
 end
 
--------------------------------------
+----------------------------------------------------------------------------------------
 -- Draws image
--- @param w image width scale
--- @param h image height scale
+-- @param CR Cairo reference
+-- @param w Image width scale
+-- @param h Image height scale
 -- @param x Upper left corner x coordinate
 -- @param y Upper left corner y coordinate
--- @param a alpha
--------------------------------------
+-- @param a Alpha
+----------------------------------------------------------------------------------------
 function jimage(CR, w, h, x, y, a)
    cairo_translate(CR, x, y)
    cairo_scale(CR, w, h)

@@ -1,5 +1,6 @@
 #!/bin/bash
 
+sudo apt-get install conky-all imagemagic
 chmod +x wetch
 mkdir ~/.fonts
 cp poiret-one/PoiretOne-Regular.ttf /home/$USER/.fonts/

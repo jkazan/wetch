@@ -1,5 +1,6 @@
 require 'cairo'
 require 'imlib2'
+
 -------------------------------------
 -- Main function
 -------------------------------------
@@ -20,9 +21,6 @@ function conky_main()
    R=0.48
    G=0.51
    B=0.67
-   badR=0.3
-   badG=0
-   badB=0
    fs = 16
 
    draw_load()
@@ -81,7 +79,6 @@ function draw_load()
    local ram_usage=tonumber(conky_parse("${memperc}"))
    local c=get_colors_gt(ram_usage, 80)
 
-
    circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 230, "100", 100, c[1], c[2], c[3], 0.2)
    circleFill(cr, x+fs*3, y+r-fs/4, r, thick, 0, 230, ram_usage, 100, c[1], c[2], c[3], 0.5)
    jprint(cr, "ram", x-50, y, fs, c[1], c[2], c[3], 1, font_n)
@@ -125,7 +122,19 @@ function draw_load()
    jprint(cr, swap_usage, x, y+4, fs, c[1], c[2], c[3], 1, font_n)
 end
 
--------------------------------------
+----------------------------------------------------------------------------------------
+-- Prints string
+-- @param CR Image width scale
+-- @param str String to print
+-- @param x Upper left corner x coordinate
+-- @param y Upper left corner y coordinate
+-- @param fontSize Font size
+-- @param r Red
+-- @param g Green
+-- @param b Blue
+-- @param a Alpha
+-- @param face Cairo font face
+----------------------------------------------------------------------------------------
 function jprint(CR, str, x, y, fontSize, r, g, b, a, face)
    cairo_select_font_face(CR, "Monospace", CAIRO_FONT_SLANT_NORMAL, face)
    cairo_set_font_size(CR, fontSize)
@@ -135,7 +144,7 @@ function jprint(CR, str, x, y, fontSize, r, g, b, a, face)
    cairo_stroke(CR)
 end
 
--------------------------------------
+----------------------------------------------------------------------------------------
 -- Draws image
 -- @param path path to image
 -- @param w image width scale
@@ -143,7 +152,7 @@ end
 -- @param x Upper left corner x coordinate
 -- @param y Upper left corner y coordinate
 -- @param a alpha
--------------------------------------
+----------------------------------------------------------------------------------------
 function jimage(CR, path, w, h, x, y, a)
    image = cairo_image_surface_create_from_png(path)
    cairo_translate(CR, x, y)
@@ -152,7 +161,7 @@ function jimage(CR, path, w, h, x, y, a)
    cairo_paint_with_alpha(cr, a)
 end
 
--------------------------------------
+----------------------------------------------------------------------------------------
 -- Draws a circle
 -- @param x center x coordinate
 -- @param y center y coordinate
@@ -166,7 +175,7 @@ end
 -- @param g green
 -- @param b blue
 -- @param a alpha
--------------------------------------
+----------------------------------------------------------------------------------------
 function circleFill(CR, x, y, rad, width, deg0, deg1, cmd, max, r, g, b, a)
    local value=conky_parse(cmd)
    local end_deg=value*(deg1-deg0)/max + deg0
@@ -177,11 +186,11 @@ function circleFill(CR, x, y, rad, width, deg0, deg1, cmd, max, r, g, b, a)
    cairo_stroke(CR)
 end
 
--------------------------------------
+----------------------------------------------------------------------------------------
 -- Returns rgb color array: Warning color if a<b else globally defined rgb
 -- @param a value to be tested
 -- @param b limit for warning color
--------------------------------------
+----------------------------------------------------------------------------------------
 function get_colors_lt(a, b)
    local colors={R, G, B}
    if a < b then
@@ -190,11 +199,11 @@ function get_colors_lt(a, b)
    return colors
 end
 
--------------------------------------
+----------------------------------------------------------------------------------------
 -- Returns rgb color array: Warning color if a>b else globally defined rgb
 -- @param a value to be tested
 -- @param b limit for warning color
--------------------------------------
+----------------------------------------------------------------------------------------
 function get_colors_gt(a, b)
    local colors={R, G, B}
    if a > b then
