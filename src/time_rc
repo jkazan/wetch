@@ -1,4 +1,3 @@
-
 conky.config = {
    background = false,
    font = 'LubalinGraphECG-Book:size=15',

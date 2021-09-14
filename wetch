@@ -1,7 +1,6 @@
 #!/bin/bash
 
 repo_path="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-echo "$(xrandr | grep -Eo 'primary \w+' | grep -Eo '[[:digit:]]+$')" > ${repo_path}/.height
 echo "$USER" > ${repo_path}/.user
 
 conky -dq -c ${repo_path}/src/time_rc

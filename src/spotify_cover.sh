@@ -24,7 +24,7 @@ if [ "$id_new" != "$id_current" ]; then
     cover=`ls ~/.cache/wetch/ | grep $id_new`
 
     if [ "$cover" == "" ]; then
-	imgid=`dbus-send \
+        imgid=`dbus-send \
                  --print-reply \
                  --dest=org.mpris.MediaPlayer2.spotify \
                    /org/mpris/MediaPlayer2 \
@@ -32,10 +32,13 @@ if [ "$id_new" != "$id_current" ]; then
                    string:'org.mpris.MediaPlayer2.Player' \
                    string:'Metadata' \
                    | grep -Eo "[[:alnum:]]{30,}"`
-        
+
         imgurl="https://d3rt1990lpmkn.cloudfront.net/640/${imgid}"
         wget ~/.cache/wetch/current.jpeg $imgurl -q -o /dev/null -O &> /dev/null
-        ffmpeg -loglevel error -y -i current.jpeg -preset ultrafast current.png 
+        ffmpeg \
+            -loglevel error \
+            -y -i ~/.cache/wetch/current.jpeg \
+            -preset ultrafast ~/.cache/wetch/current.png
     fi
 
     echo $id_new > ~/.cache/wetch/spotify_cover_id

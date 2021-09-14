@@ -108,7 +108,7 @@ function draw_load()
    jprint(cr, "home", x-50, y, fs, c[1], c[2], c[3], 1, font_n)
    jprint(cr, "%", x+27, y, fs, c[1], c[2], c[3], 1, font_n)
    jprint(cr, home_usage, x, y, fs, c[1], c[2], c[3], 1, font_n)
-   
+
    -- swap
    local r = 6
    local y = y0 + 80 - r

@@ -7,7 +7,7 @@ do
     name=$(sudo cat /var/lib/bluetooth/${device}/${i}/info \
                | grep Name= \
                | awk -F'=' '{print $2}')
-    
+
     if [ $first = true ]; then
         first=false
         echo "Bluetooth: $name"
