@@ -2,11 +2,9 @@
 
 sudo apt-get install conky-all
 chmod +x wetch
-mkdir ~/.fonts
+mkdir -p ~/.fonts
 cp poiret-one/PoiretOne-Regular.ttf /home/$USER/.fonts/
-fc-cache -fv
+fc-cache -f
 repo_path="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 sed -i "s|PLACEHOLDER_WETCH_PATH|${repo_path}|g" "$repo_path"/src/*
-
-
-
+echo done
