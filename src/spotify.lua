@@ -42,15 +42,15 @@ end
 
 function spotify()
    -- Artist
-   jprint(cr, conky_parse("${execi 1 ~/wetch/src/spotify-artist.sh}"),
+   jprint(cr, conky_parse("${execi 1 ~/wetch/src/spotify_artist.sh}"),
           x+5, y+15, fs, 0.31, 0.54, 0, 1, font_n)
 
    -- Title
-   jprint(cr, conky_parse("${execi 1 ~/wetch/src/spotify-title.sh}"),
+   jprint(cr, conky_parse("${execi 1 ~/wetch/src/spotify_title.sh}"),
           x+5, y+fs+20, fs, 0.31, 0.54, 0, 1, font_n)
 
    -- Artwork
-   conky_parse("${execi 1 ~/wetch/src/spotify-cover.sh}")
+   conky_parse("${execi 1 ~/wetch/src/spotify_cover.sh}")
    jimage(cr, 0.4, 0.4, x+5, y + 40, 0.8)
 end
 
