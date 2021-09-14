@@ -1,5 +1,5 @@
 conky.config = {
-   lua_load = '~/wetch/src/network.lua',
+   lua_load = 'PLACEHOLDER_WETCH_PATH/src/network.lua',
    lua_draw_hook_post  = 'main',
    --  Generic Settings
    background=true,
