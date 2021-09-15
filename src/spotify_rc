@@ -2,60 +2,50 @@ conky.config = {
    lua_load = 'PLACEHOLDER_WETCH_PATH/src/spotify.lua',
    lua_draw_hook_post  = 'main',
 
-   --  Generic Settings
-   imlib_cache_flush_interval=1,
-   imlib_cache_size=0,
-
-   background=true,
-   update_interval=1,
-   double_buffer=true,
-   no_buffers=true,
-   imlib_cache_size=10,
-
-   draw_shades=false,
-   draw_outline=false,
-   draw_borders=false,
-   draw_graph_borders=false,
-
-   --  Window Specifications
    gap_x=20,
    gap_y=740,
-
-   alignment="top_left",
-   xinerama_head = 0,
-
-   minimum_height=700,
+   minimum_height=600,
    minimum_width=250,
 
-   own_window=true,
-   -- own_window_class="conky",
-   own_window_class="conky_semi",
-   -- own_window_type="override",
-   own_window_type="dock",
-   -- own_window_type="panel",
-   own_window_transparent=false,
-   own_window_hints="undecorated,below,sticky,skip_taskbar,skip_pager",
-   -- own_window_hints="undecorated,below,skip_taskbar,skip_pager",
-   -- own_window_hints="above",
-
+   own_window = true,
+   own_window_type = 'dock',
+   own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+   own_window_argb_visual = true,
+   own_window_transparent = true,
+   own_window_colour=000000,
    own_window_argb_visual=true,
-   own_window_argb_value=0,
+   own_window_argb_value = 0, -- 70 to get a nice black transparent bg
+   own_window_colour = '#000000',
 
+   draw_shades = false,
+   draw_outline = false,
+   draw_borders = false,
+   draw_graph_borders = true,
 
-   --  Text Settings
-   -------------------------------------
-   use_xft=true,
-   xftalpha=1,
-   font="Droid Sans:size=10",
-   text_buffer_size=256,
-   override_utf8_locale=true,
+   background = false,
+   use_xft = true,
+   xftalpha = 0.9,
+   update_interval = 1,
+   imlib_cache_size = 0,
+   total_run_times = 0,
+   double_buffer = true,
+   alignment = 'top_left',
+   xinerama_head = 0,
+   no_buffers = true,
+   cpu_avg_samples = 1,
+   uppercase = false,
 
-   color1 = '#7b81ab',
+   -- font
+   font = 'PoiretOne-Regular:size=12:bold',
+
+   -- colors
+   color1 = '#000000',
    color2 = '#101010',
+   color3 = '#7b81ab',
 }
 
 ---------------------------------------------------
 ---------------------------------------------------
 conky.text = [[
-${color1}${font PoiretOne-Regular:size=12:bold}SPOTIFY ${color2} ${hr 2} ${color1}
+${color3}${font}SPOTIFY ${color2} ${hr 2} ${color1}
 ]]

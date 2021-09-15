@@ -1,54 +1,45 @@
 conky.config = {
+   gap_x = 30,
+   gap_y = 10,
+
+
+   own_window = true,
+   own_window_type = 'dock',
+   own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+   own_window_argb_visual = true,
+   own_window_transparent = true,
+   own_window_colour=000000,
+   own_window_argb_visual=true,
+   own_window_argb_value = 0, -- 70 to get a nice black transparent bg
+   own_window_colour = '#000000',
+
+   draw_shades = false,
+   draw_outline = false,
+   draw_borders = false,
+   draw_graph_borders = true,
+
    background = false,
-   font = 'LubalinGraphECG-Book:size=15',
-   --xftfont sans:size=10
    use_xft = true,
    xftalpha = 0.9,
    update_interval = 1,
    imlib_cache_size = 0,
    total_run_times = 0,
-   own_window = true,
-   own_window_type = 'dock',
-   own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
-   own_window_argb_visual = true,
-
-   -- Uncomment and adjust the line below for window's opacity
-   own_window_transparent = false,
-   own_window_argb_visual=true,
-   own_window_argb_value = 0, -- 70 to get a nice black transparent bg
-   own_window_colour = '#000000',
    double_buffer = true,
-   minimum_width = 245,
-   minimum_height = 1380,
-   draw_shades = false,
-   draw_outline = false,
-   draw_borders = false,
-   draw_graph_borders = true,
-   -- default_color = '#101010',
-   -- default_shade_color = '#101010',
-   use_xft = true,
-
-
    alignment = 'top_left',
    xinerama_head = 0,
-
-   gap_x = 30,
-   gap_y = 10,
-
    no_buffers = true,
    cpu_avg_samples = 1,
    uppercase = false,
-   border_inner_margin = 15,
 
-   --colors
+   -- font
+   font = 'PoiretOne-Regular:size=16:bold',
+
+   -- colors
    color1 = '#7b81ab',
    color2 = '#aaa',
    color3 = '#ddd',
-   -- ${color1}${font Oswald:size=10:bold}TIME ${color2} ${hr 2} ${color3}${font}
-   -- ${color3}${font Roboto:pixelsize=70}${alignr}${time %I:%M}${font}${time %S}
-   -- ${color3}${font Open Sans:pixelsize=11}${alignr}${time %x}${font}
 };
 
 conky.text = [[${color1}${font PoiretOne-Regular:size=40}${time %H}:${time %M}${font}${time %S}
-${font PoiretOne-Regular:bold:size=16}${time %a %d %b %Y}
+${font}${time %a %d %b %Y}
 ]];

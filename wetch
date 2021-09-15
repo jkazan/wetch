@@ -5,8 +5,8 @@ echo "$USER" > ${repo_path}/.user
 
 conky -dq -c ${repo_path}/src/time_rc
 conky -dq -c ${repo_path}/src/misc_rc
-conky -dq -c ${repo_path}/src/spotify_rc
 conky -dq -c ${repo_path}/src/load_rc
 conky -dq -c ${repo_path}/src/network_rc
+conky -dq -c ${repo_path}/src/spotify_rc
 
 export WETCH_PATH=${repo_path}
