@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo -e "installing conky..."
-sudo apt-get -qq install conky-all
+sudo apt-get -qq install conky-all ffmpeg net-tools
 
 echo -e "verifying ~/.fonts directory..."
 mkdir -p ~/.fonts

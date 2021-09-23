@@ -6,11 +6,13 @@
 ### Dependencies
 The following dependencies will be installed by the install script if not already installed:
 - conky-all
+- ffmpeg
+- net-tools
 
 ### Installation
 ```sh
 cd wetch
-./install.sh
+./install
 
 ```
 
