@@ -3,10 +3,11 @@
 repo_path="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 echo "$USER" > ${repo_path}/.user
 
-conky -dq -c ${repo_path}/src/time_rc
-conky -dq -c ${repo_path}/src/misc_rc
-conky -dq -c ${repo_path}/src/load_rc
-conky -dq -c ${repo_path}/src/network_rc
-conky -dq -c ${repo_path}/src/spotify_rc
+bash -c "exec -a 'wetch' conky -dq -c ${repo_path}/src/time_rc"
+bash -c "exec -a 'wetch' conky -dq -c ${repo_path}/src/misc_rc"
+bash -c "exec -a 'wetch' conky -dq -c ${repo_path}/src/load_rc"
+bash -c "exec -a 'wetch' conky -dq -c ${repo_path}/src/network_rc"
+bash -c "exec -a 'wetch' conky -dq -c ${repo_path}/src/spotify_rc"
 
 export WETCH_PATH=${repo_path}
+

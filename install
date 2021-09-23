@@ -1,19 +1,16 @@
 #!/bin/bash
 
-GREEN="\e[1;32m"
-END="\e[0m"
+echo -e "installing conky..."
+sudo apt-get -qq install conky-all
 
-echo -e "${GREEN}installing conky... $END"
-sudo apt-get install conky-all
-
-echo -e "${GREEN}Verifying ~/.fonts... $END"
+echo -e "verifying ~/.fonts directory..."
 mkdir -p ~/.fonts
 
-echo -e "${GREEN}Adding font and updating cache... $END"
+echo -e "adding font and updating cache..."
 cp poiret-one/PoiretOne-Regular.ttf /home/$USER/.fonts/
 fc-cache -f
 
-echo -e "${GREEN}Verifying wetch path... $END"
+echo -e "berifying wetch path..."
 repo_path="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 sed -i "s|PLACEHOLDER_WETCH_PATH|${repo_path}|g" "$repo_path"/src/*
 
