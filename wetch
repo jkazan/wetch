@@ -1,13 +1,63 @@
 #!/bin/bash
 
-repo_path="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-echo "$USER" > ${repo_path}/.user
+function main() {
+    x_offset=$1
+    y_offset=$2
 
-bash -c "exec -a 'wetch' conky -dq -c ${repo_path}/src/time_rc"
-bash -c "exec -a 'wetch' conky -dq -c ${repo_path}/src/misc_rc"
-bash -c "exec -a 'wetch' conky -dq -c ${repo_path}/src/load_rc"
-bash -c "exec -a 'wetch' conky -dq -c ${repo_path}/src/network_rc"
-bash -c "exec -a 'wetch' conky -dq -c ${repo_path}/src/spotify_rc"
+    let misc_offset=${y_offset}+90
+    let load_offset=${y_offset}+160
+    let network_offset=${y_offset}+600
+    let spotify_offset=${y_offset}+730
 
-export WETCH_PATH=${repo_path}
+    echo ${y_offset}
 
+    repo_path="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+    echo "$USER" > ${repo_path}/.user
+
+    bash -c "exec -a 'wetch' conky -dq -c ${repo_path}/src/time_rc -x ${x_offset} -y ${y_offset}"
+    bash -c "exec -a 'wetch' conky -dq -c ${repo_path}/src/misc_rc -x ${x_offset} -y ${misc_offset}"
+    bash -c "exec -a 'wetch' conky -dq -c ${repo_path}/src/load_rc -x ${x_offset} -y ${load_offset}"
+    bash -c "exec -a 'wetch' conky -dq -c ${repo_path}/src/network_rc -x ${x_offset} -y ${network_offset}"
+    bash -c "exec -a 'wetch' conky -dq -c ${repo_path}/src/spotify_rc -x ${x_offset} -y ${spotify_offset}"
+
+    export WETCH_PATH=${repo_path}
+}
+
+#######################################
+# Usage printout
+#######################################
+function usage() {
+    usg="Usage: wetch [-x X-OFFSET] [-y Y-OFFSET]"
+    example="Example: ./wetch -x 20 -y 10"
+
+    dscr="TODO"
+
+    echo "wetch"
+    echo
+    echo $usg
+    echo $example
+    echo
+    echo "DESCRIPTION:"
+
+    echo -e $dscr
+    echo
+    echo "OPTIONS:"
+    echo "-h     Print this help text"
+}
+
+X_OFFSET=20
+Y_OFFSET=10
+while getopts hx:y: opt; do
+    case $opt in
+        h) usage; exit 0 ;;
+        x) X_OFFSET=$OPTARG ;;
+        y) Y_OFFSET=$OPTARG ;;
+        *)
+            echo 'Error in command line parsing' >&2
+            exit 1
+    esac
+done
+
+shift "$(( OPTIND - 1 ))"
+
+main ${X_OFFSET} ${Y_OFFSET}
