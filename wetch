@@ -9,8 +9,6 @@ function main() {
     let network_offset=${y_offset}+600
     let spotify_offset=${y_offset}+730
 
-    echo ${y_offset}
-
     repo_path="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
     echo "$USER" > ${repo_path}/.user
 
