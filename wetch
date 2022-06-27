@@ -3,14 +3,12 @@
 function main() {
     x_offset=$1
     y_offset=$2
+    repo_path=$3
 
     let misc_offset=${y_offset}+90
     let load_offset=${y_offset}+160
     let network_offset=${y_offset}+600
     let spotify_offset=${y_offset}+730
-
-    repo_path="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-    echo "$USER" > ${repo_path}/.user
 
     bash -c "exec -a 'wetch' conky -dq -c ${repo_path}/src/time_rc -x ${x_offset} -y ${y_offset}"
     bash -c "exec -a 'wetch' conky -dq -c ${repo_path}/src/misc_rc -x ${x_offset} -y ${misc_offset}"
@@ -45,6 +43,8 @@ function usage() {
 
 X_OFFSET=20
 Y_OFFSET=10
+repo_path="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+. ${repo_path}/.env
 while getopts hx:y: opt; do
     case $opt in
         h) usage; exit 0 ;;
@@ -58,4 +58,4 @@ done
 
 shift "$(( OPTIND - 1 ))"
 
-main ${X_OFFSET} ${Y_OFFSET}
+main ${X_OFFSET} ${Y_OFFSET} ${WETCH_PATH}

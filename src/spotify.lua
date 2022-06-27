@@ -27,6 +27,7 @@ function conky_main()
    badB=0
    fs = 14
 
+   repo_path = os.getenv("WETCH_PATH")
    user = conky_parse("${execi 999999 cat PLACEHOLDER_WETCH_PATH/.user}")
    image = cairo_image_surface_create_from_png("/home/"..user.."/.cache/wetch/current.png")
    x = 0
@@ -40,13 +41,13 @@ function conky_main()
 end
 
 function spotify()
-   conky_parse("${execi 1 PLACEHOLDER_WETCH_PATH/src/spotify_metadata.sh}")
+   conky_parse("${execi 1 "..repo_path.."/src/spotify_metadata.sh}")
    -- Artist
-   jprint(cr, conky_parse("${execi 1 PLACEHOLDER_WETCH_PATH/src/spotify_artist.sh}"),
+   jprint(cr, conky_parse("${execi 1 "..repo_path.."/src/spotify_artist.sh}"),
           x+5, y+15, fs, 0.31, 0.54, 0, 1, font_n)
 
    -- Title
-   jprint(cr, conky_parse("${execi 1 PLACEHOLDER_WETCH_PATH/src/spotify_title.sh}"),
+   jprint(cr, conky_parse("${execi 1 "..repo_path.."/src/spotify_title.sh}"),
           x+5, y+fs+20, fs, 0.31, 0.54, 0, 1, font_n)
 
    -- Artwork
